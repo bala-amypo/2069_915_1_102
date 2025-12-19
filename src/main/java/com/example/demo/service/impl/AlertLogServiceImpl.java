@@ -1,4 +1,49 @@
-// // AlertLogServiceImpl.java
+// // // AlertLogServiceImpl.java
+// // package com.example.demo.service.impl;
+
+// // import com.example.demo.entity.AlertLog;
+// // import com.example.demo.entity.Warranty;
+// // import com.example.demo.repository.AlertLogRepository;
+// // import com.example.demo.repository.WarrantyRepository;
+// // import com.example.demo.service.AlertLogService;
+// // import org.springframework.beans.factory.annotation.Autowired;
+// // import org.springframework.stereotype.Service;
+
+// // import java.util.List;
+
+// // @Service
+// // public class AlertLogServiceImpl implements AlertLogService {
+
+// //     @Autowired
+// //     private AlertLogRepository alertLogRepository;
+
+// //     @Autowired
+// //     private WarrantyRepository warrantyRepository;
+
+// //     @Override
+// //     public AlertLog addLog(Long warrantyId, String message) {
+// //         Warranty warranty = warrantyRepository.findById(warrantyId)
+// //                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
+
+// //         AlertLog log = new AlertLog();
+// //         log.setWarranty(warranty);
+// //         log.setMessage(message);
+
+// //         return alertLogRepository.save(log);
+// //     }
+
+// //     @Override
+// //     public List<AlertLog> getLogs(Long warrantyId) {
+// //         Warranty warranty = warrantyRepository.findById(warrantyId)
+// //                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
+
+// //         return alertLogRepository.findAll()
+// //                 .stream()
+// //                 .filter(l -> l.getWarranty().equals(warranty))
+// //                 .toList();
+// //     }
+// // }
+
 // package com.example.demo.service.impl;
 
 // import com.example.demo.entity.AlertLog;
@@ -22,28 +67,20 @@
 
 //     @Override
 //     public AlertLog addLog(Long warrantyId, String message) {
-//         Warranty warranty = warrantyRepository.findById(warrantyId)
-//                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
-
+//         Warranty warranty = warrantyRepository.findById(warrantyId).get();
 //         AlertLog log = new AlertLog();
 //         log.setWarranty(warranty);
 //         log.setMessage(message);
-
 //         return alertLogRepository.save(log);
 //     }
 
 //     @Override
 //     public List<AlertLog> getLogs(Long warrantyId) {
-//         Warranty warranty = warrantyRepository.findById(warrantyId)
-//                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
-
-//         return alertLogRepository.findAll()
-//                 .stream()
-//                 .filter(l -> l.getWarranty().equals(warranty))
-//                 .toList();
+//         return alertLogRepository.findAll();
 //     }
 // }
 
+// src/main/java/com/example/demo/service/impl/AlertLogServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.AlertLog;
@@ -51,31 +88,30 @@ import com.example.demo.entity.Warranty;
 import com.example.demo.repository.AlertLogRepository;
 import com.example.demo.repository.WarrantyRepository;
 import com.example.demo.service.AlertLogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class AlertLogServiceImpl implements AlertLogService {
 
-    @Autowired
-    private AlertLogRepository alertLogRepository;
+    private final AlertLogRepository logRepository;
+    private final WarrantyRepository warrantyRepository;
 
-    @Autowired
-    private WarrantyRepository warrantyRepository;
+    public AlertLogServiceImpl(AlertLogRepository logRepository, WarrantyRepository warrantyRepository) {
+        this.logRepository = logRepository;
+        this.warrantyRepository = warrantyRepository;
+    }
 
     @Override
     public AlertLog addLog(Long warrantyId, String message) {
-        Warranty warranty = warrantyRepository.findById(warrantyId).get();
-        AlertLog log = new AlertLog();
-        log.setWarranty(warranty);
-        log.setMessage(message);
-        return alertLogRepository.save(log);
+        Warranty w = warrantyRepository.findById(warrantyId).orElseThrow(() -> new RuntimeException("Warranty not found"));
+        AlertLog log = AlertLog.builder().warrantyId(w.getId()).message(message).build();
+        log.prePersist();
+        return logRepository.save(log);
     }
 
     @Override
     public List<AlertLog> getLogs(Long warrantyId) {
-        return alertLogRepository.findAll();
+        warrantyRepository.findById(warrantyId).orElseThrow(() -> new RuntimeException("Warranty not found"));
+        return logRepository.findByWarrantyId(warrantyId);
     }
 }
