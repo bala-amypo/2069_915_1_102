@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Warranty;
+import com.example.demo.entity.Warranty;
 import com.example.demo.service.WarrantyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
