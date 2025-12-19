@@ -5,13 +5,13 @@ import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
 public class JwtTokenProvider {
 
-    private final Key key;
+    private final SecretKey key;
     private final long expirationMs;
 
     public JwtTokenProvider(JwtProperties properties) {
@@ -29,14 +29,14 @@ public class JwtTokenProvider {
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(key, Jwts.SIG.HS256)   // new signature API in 0.12.x
+                .signWith(key, Jwts.SIG.HS256)   // ✅ SecretKey + MacAlgorithm
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .verifyWith(key)   // replaces parserBuilder().setSigningKey(key)
+                .verifyWith(key)   // ✅ SecretKey accepted
                 .build()
                 .parseSignedClaims(token);
             return true;
@@ -47,7 +47,7 @@ public class JwtTokenProvider {
 
     public Jws<Claims> getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(key)   // ✅ SecretKey accepted
                 .build()
                 .parseSignedClaims(token);
     }
