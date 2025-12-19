@@ -25,7 +25,6 @@ public class AlertScheduleServiceImpl implements AlertScheduleService {
         Warranty warranty = warrantyRepository.findById(warrantyId)
                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
 
-        // Validate daysBeforeExpiry per test expectations
         Integer days = schedule.getDaysBeforeExpiry();
         if (days != null && days < 0) {
             throw new IllegalArgumentException("daysBeforeExpiry must be >= 0");
@@ -37,7 +36,6 @@ public class AlertScheduleServiceImpl implements AlertScheduleService {
 
     @Override
     public List<AlertSchedule> getSchedules(Long warrantyId) {
-        // Ensure warranty exists (tests expect RuntimeException on missing warranty)
         warrantyRepository.findById(warrantyId)
                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
         return scheduleRepository.findByWarrantyId(warrantyId);

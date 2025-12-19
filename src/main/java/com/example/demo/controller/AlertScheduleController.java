@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/controller/AlertScheduleController.java
 package com.example.demo.controller;
 
 import com.example.demo.entity.AlertSchedule;
@@ -22,19 +23,6 @@ public class AlertScheduleController {
     }
 
     // GET /schedules/{warrantyId} — list schedules for warranty
-    @GetMapping("/{warrantyId}")
-    public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
-        return alertScheduleService.getSchedules(warrantyId);
-    }
-}
-    @Autowired
-    private AlertScheduleService alertScheduleService;
-
-    @PostMapping("/{warrantyId}")
-    public AlertSchedule createSchedule(@PathVariable Long warrantyId, @RequestBody AlertSchedule schedule) {
-        return alertScheduleService.createSchedule(warrantyId, schedule);
-    }
-
     @GetMapping("/{warrantyId}")
     public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
         return alertScheduleService.getSchedules(warrantyId);
