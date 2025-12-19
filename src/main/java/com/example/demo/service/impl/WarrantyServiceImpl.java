@@ -1,10 +1,17 @@
 // src/main/java/com/example/demo/service/impl/WarrantyServiceImpl.java
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Product;
+import com.example.demo.entity.User;
+import com.example.demo.entity.Warranty;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.WarrantyRepository;
 import com.example.demo.service.WarrantyService;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 @Service
 public class WarrantyServiceImpl implements WarrantyService {
     private final WarrantyRepository warrantyRepo;
