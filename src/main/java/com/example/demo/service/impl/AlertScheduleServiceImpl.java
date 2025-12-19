@@ -9,6 +9,7 @@ import com.example.demo.service.AlertScheduleService;
 
 import java.util.List;
 
+@Service
 public class AlertScheduleServiceImpl implements AlertScheduleService {
 
     private final AlertScheduleRepository scheduleRepository;

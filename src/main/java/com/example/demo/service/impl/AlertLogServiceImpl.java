@@ -6,9 +6,11 @@ import com.example.demo.entity.Warranty;
 import com.example.demo.repository.AlertLogRepository;
 import com.example.demo.repository.WarrantyRepository;
 import com.example.demo.service.AlertLogService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // <-- This makes Spring register it as a bean
 public class AlertLogServiceImpl implements AlertLogService {
 
     private final AlertLogRepository logRepository;
@@ -24,7 +26,6 @@ public class AlertLogServiceImpl implements AlertLogService {
         Warranty warranty = warrantyRepository.findById(warrantyId)
                 .orElseThrow(() -> new RuntimeException("Warranty not found"));
 
-        // Use builder with warranty object, not warrantyId
         AlertLog log = AlertLog.builder()
                 .warranty(warranty)
                 .message(message)
