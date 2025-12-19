@@ -10,18 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/schedules")
 public class AlertScheduleController {
-package com.example.demo.controller;
-
-import com.example.demo.entity.AlertSchedule;
-import com.example.demo.service.AlertScheduleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/schedules")
-public class AlertScheduleController {
 
     @Autowired
     private AlertScheduleService alertScheduleService;
