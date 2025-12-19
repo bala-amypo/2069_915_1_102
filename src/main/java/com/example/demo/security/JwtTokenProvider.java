@@ -22,19 +22,23 @@ public class JwtTokenProvider {
     public String createToken(Long userId, String email, String role) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationMs);
+
         return Jwts.builder()
                 .claim("userId", userId)
                 .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key, Jwts.SIG.HS256)   // new signature API in 0.12.x
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser()
+                .verifyWith(key)   // replaces parserBuilder().setSigningKey(key)
+                .build()
+                .parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
             return false;
@@ -42,6 +46,9 @@ public class JwtTokenProvider {
     }
 
     public Jws<Claims> getClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
     }
 }
