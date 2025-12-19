@@ -14,11 +14,13 @@ public class AlertLogController {
     @Autowired
     private AlertLogService alertLogService;
 
+    // POST /logs/{warrantyId} — add log message
     @PostMapping("/{warrantyId}")
     public AlertLog addLog(@PathVariable Long warrantyId, @RequestBody String message) {
         return alertLogService.addLog(warrantyId, message);
     }
 
+    // GET /logs/{warrantyId} — list logs for warranty
     @GetMapping("/{warrantyId}")
     public List<AlertLog> getLogs(@PathVariable Long warrantyId) {
         return alertLogService.getLogs(warrantyId);
