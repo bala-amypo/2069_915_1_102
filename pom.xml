@@ -124,7 +124,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<!-- ✅ Added release for Java 17 -->
-					<release>17</release>
+					<release>21</release>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
