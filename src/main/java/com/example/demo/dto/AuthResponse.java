@@ -5,6 +5,8 @@ import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class AuthResponse {
-    private String token;
+    private Long userId;
+    private String email;
     private String role;
+    private String token; // optional if you later add tokens, otherwise omit
 }
