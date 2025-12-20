@@ -8,5 +8,5 @@ public class AuthResponse {
     private Long userId;
     private String email;
     private String role;
-    private String token; // optional if you later add tokens, otherwise omit
+    // token field optional; omit if JWT excluded
 }

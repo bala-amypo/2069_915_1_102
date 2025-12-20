@@ -9,16 +9,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/schedules")
 public class AlertScheduleController {
-  private final AlertScheduleService alertScheduleService;
-  public AlertScheduleController(AlertScheduleService s) { this.alertScheduleService = s; }
+    private final AlertScheduleService alertScheduleService;
+    public AlertScheduleController(AlertScheduleService s) { this.alertScheduleService = s; }
 
-  @PostMapping("/{warrantyId}")
-  public AlertSchedule createSchedule(@PathVariable Long warrantyId, @RequestBody AlertSchedule schedule) {
-    return alertScheduleService.createSchedule(warrantyId, schedule);
-  }
+    @PostMapping("/{warrantyId}")
+    public AlertSchedule createSchedule(@PathVariable Long warrantyId, @RequestBody AlertSchedule schedule) {
+        return alertScheduleService.createSchedule(warrantyId, schedule);
+    }
 
-  @GetMapping("/{warrantyId}")
-  public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
-    return alertScheduleService.getSchedules(warrantyId);
-  }
+    @GetMapping("/{warrantyId}")
+    public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
+        return alertScheduleService.getSchedules(warrantyId);
+    }
 }

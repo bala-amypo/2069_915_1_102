@@ -9,16 +9,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/logs")
 public class AlertLogController {
-  private final AlertLogService alertLogService;
-  public AlertLogController(AlertLogService s) { this.alertLogService = s; }
+    private final AlertLogService alertLogService;
+    public AlertLogController(AlertLogService s) { this.alertLogService = s; }
 
-  @PostMapping("/{warrantyId}")
-  public AlertLog addLog(@PathVariable Long warrantyId, @RequestBody String message) {
-    return alertLogService.addLog(warrantyId, message);
-  }
+    @PostMapping("/{warrantyId}")
+    public AlertLog addLog(@PathVariable Long warrantyId, @RequestBody String message) {
+        return alertLogService.addLog(warrantyId, message);
+    }
 
-  @GetMapping("/{warrantyId}")
-  public List<AlertLog> getLogs(@PathVariable Long warrantyId) {
-    return alertLogService.getLogs(warrantyId);
-  }
+    @GetMapping("/{warrantyId}")
+    public List<AlertLog> getLogs(@PathVariable Long warrantyId) {
+        return alertLogService.getLogs(warrantyId);
+    }
 }

@@ -9,23 +9,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/warranties")
 public class WarrantyController {
-  private final WarrantyService warrantyService;
-  public WarrantyController(WarrantyService warrantyService) { this.warrantyService = warrantyService; }
+    private final WarrantyService warrantyService;
+    public WarrantyController(WarrantyService warrantyService) { this.warrantyService = warrantyService; }
 
-  @PostMapping("/register/{userId}/{productId}")
-  public Warranty registerWarranty(@PathVariable Long userId,
-                                   @PathVariable Long productId,
-                                   @RequestBody Warranty request) {
-    return warrantyService.registerWarranty(userId, productId, request);
-  }
+    @PostMapping("/register/{userId}/{productId}")
+    public Warranty registerWarranty(@PathVariable Long userId,
+                                     @PathVariable Long productId,
+                                     @RequestBody Warranty request) {
+        return warrantyService.registerWarranty(userId, productId, request);
+    }
 
-  @GetMapping("/{warrantyId}")
-  public Warranty getWarranty(@PathVariable Long warrantyId) {
-    return warrantyService.getWarranty(warrantyId);
-  }
+    @GetMapping("/{warrantyId}")
+    public Warranty getWarranty(@PathVariable Long warrantyId) {
+        return warrantyService.getWarranty(warrantyId);
+    }
 
-  @GetMapping("/user/{userId}")
-  public List<Warranty> getUserWarranties(@PathVariable Long userId) {
-    return warrantyService.getUserWarranties(userId);
-  }
+    @GetMapping("/user/{userId}")
+    public List<Warranty> getUserWarranties(@PathVariable Long userId) {
+        return warrantyService.getUserWarranties(userId);
+    }
 }
