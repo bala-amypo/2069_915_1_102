@@ -1,4 +1,4 @@
-// src/main/java/com/example/demo/dto/AuthResponse.java
+// AuthResponse.java
 package com.example.demo.dto;
 
 import lombok.*;
@@ -8,5 +8,4 @@ public class AuthResponse {
     private Long userId;
     private String email;
     private String role;
-    // token field optional; omit if JWT excluded
 }

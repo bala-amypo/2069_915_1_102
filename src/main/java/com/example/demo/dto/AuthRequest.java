@@ -1,4 +1,4 @@
-// src/main/java/com/example/demo/dto/AuthRequest.java
+// AuthRequest.java
 package com.example.demo.dto;
 
 import lombok.*;

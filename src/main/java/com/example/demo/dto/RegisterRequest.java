@@ -1,4 +1,4 @@
-// src/main/java/com/example/demo/dto/RegisterRequest.java
+// RegisterRequest.java
 package com.example.demo.dto;
 
 import lombok.*;
@@ -8,5 +8,5 @@ public class RegisterRequest {
     private String name;
     private String email;
     private String password;
-    private String role; // optional, default to USER if null
+    private String role; // optional, default USER
 }
