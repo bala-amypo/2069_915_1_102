@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // <-- This makes Spring register it as a bean
+@Service
 public class AlertLogServiceImpl implements AlertLogService {
 
     private final AlertLogRepository logRepository;
