@@ -7,16 +7,16 @@ public class JwtTokenProvider {
         // Accept config, do nothing
     }
 
-    public String createToken() {
-        return null;
+    public String createToken(Long userId, String email, String role) {
+        return "dummy-token";
     }
 
-    public boolean validateToken() {
-        return null;
+    public boolean validateToken(String token) {
+        return true;
     }
 
-    public DummyClaims getClaims() {
-        return null;
+    public DummyClaims getClaims(String token) {
+        return new DummyClaims();
     }
 
     public static class DummyClaims {
