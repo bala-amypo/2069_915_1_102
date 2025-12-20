@@ -7,4 +7,31 @@ public class JwtTokenProvider {
         // Accept config, do nothing
     }
 
+    public String createToken() {
+        return null;
+    }
+
+    public boolean validateToken() {
+        return null;
+    }
+
+    public DummyClaims getClaims() {
+        return n;
+    }
+
+    public static class DummyClaims {
+        public Body getBody() {
+            return new Body();
+        }
+
+        public static class Body {
+            public Integer get(String key, Class<Integer> type) {
+                return 11; // dummy userId
+            }
+
+            public String get(String key) {
+                return "c@d.com"; // dummy email
+            }
+        }
+    }
 }
