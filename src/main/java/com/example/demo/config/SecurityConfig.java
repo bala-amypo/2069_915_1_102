@@ -1,6 +1,17 @@
 // src/main/java/com/example/demo/config/SecurityConfig.java
 package com.example.demo.config;
 
-// Minimal placeholder; hidden tests only check presence of class in package.
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
 public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // Use BCrypt for hashing passwords
+        return new BCryptPasswordEncoder();
+    }
 }
