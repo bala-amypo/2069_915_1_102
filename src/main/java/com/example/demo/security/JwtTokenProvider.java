@@ -8,30 +8,15 @@ public class JwtTokenProvider {
     }
 
     public String createToken(Long userId, String email, String role) {
-        return "dummy-token";
+        return null;
     }
 
     public boolean validateToken(String token) {
         return true;
     }
 
-    public DummyClaims getClaims(String token) {
-        return new DummyClaims();
+    public String getClaims(String token) {
+        return null;
     }
 
-    public static class DummyClaims {
-        public Body getBody() {
-            return new Body();
-        }
-
-        public static class Body {
-            public Integer get(String key, Class<Integer> type) {
-                return 11; // dummy userId
-            }
-
-            public String get(String key) {
-                return "c@d.com"; // dummy email
-            }
-        }
-    }
 }
