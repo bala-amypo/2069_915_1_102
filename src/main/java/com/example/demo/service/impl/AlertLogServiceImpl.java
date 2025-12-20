@@ -28,7 +28,7 @@ public class AlertLogServiceImpl implements AlertLogService {
       .message(message)
       .build();
 
-    log.prePersist(); // set sentAt
+    log.prePersist();
     return logRepository.save(log);
   }
 
