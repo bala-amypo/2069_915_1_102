@@ -1,6 +1,6 @@
-// ModelValidator.java
+// src/main/java/com/example/demo/util/ModelValidator.java
 package com.example.demo.util;
 
 public class ModelValidator {
-	// validation helper skeleton
+  // place simple reusable checks here if needed (kept minimal per scope)
 }
