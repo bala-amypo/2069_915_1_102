@@ -4,11 +4,13 @@ package com.example.demo.security;
 import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Component   // <-- registers as a Spring bean
 public class JwtTokenProvider {
 
     private final SecretKey key;
@@ -29,14 +31,14 @@ public class JwtTokenProvider {
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(key, Jwts.SIG.HS256)   // ✅ SecretKey + MacAlgorithm
+                .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .verifyWith(key)   // ✅ SecretKey accepted
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token);
             return true;
@@ -47,7 +49,7 @@ public class JwtTokenProvider {
 
     public Jws<Claims> getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(key)   // ✅ SecretKey accepted
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token);
     }

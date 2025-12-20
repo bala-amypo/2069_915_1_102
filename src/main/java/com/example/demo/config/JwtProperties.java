@@ -1,11 +1,29 @@
 // src/main/java/com/example/demo/config/JwtProperties.java
 package com.example.demo.config;
 
-import lombok.Getter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-@Getter
+@Configuration
+@ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
-    // Hidden tests set these via reflection; keep as private fields with getters.
-    private String secret = "default-32-characters-secret-string-1234";
-    private long expirationMs = 3600000L; // 1 hour
+
+    private String secret;
+    private long expirationMs;
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public long getExpirationMs() {
+        return expirationMs;
+    }
+
+    public void setExpirationMs(long expirationMs) {
+        this.expirationMs = expirationMs;
+    }
 }
