@@ -13,16 +13,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ✅ Constructor for Spring injection
-    public UserServiceImpl(UserRepository repo, PasswordEncoder encoder) {
-        this.userRepository = repo;
-        this.passwordEncoder = encoder;
-    }
-
-    // ✅ Constructor for test suite (manual instantiation)
+    // ✅ Constructor expected by tests (only UserRepository)
     public UserServiceImpl(UserRepository repo) {
         this.userRepository = repo;
-        this.passwordEncoder = new BCryptPasswordEncoder(); // fallback for tests
+        // Instantiate encoder internally so tests don’t need to inject it
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
