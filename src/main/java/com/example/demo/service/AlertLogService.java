@@ -1,14 +1,3 @@
-// // AlertLogService.java
-// package com.example.demo.service;
-
-// import com.example.demo.entity.AlertLog;
-// import java.util.List;
-
-// public interface AlertLogService {
-//     AlertLog addLog(Long warrantyId, String message);
-//     List<AlertLog> getLogs(Long warrantyId);
-// }
-
 // src/main/java/com/example/demo/service/AlertLogService.java
 package com.example.demo.service;
 
@@ -16,6 +5,6 @@ import com.example.demo.entity.AlertLog;
 import java.util.List;
 
 public interface AlertLogService {
-    AlertLog addLog(Long warrantyId, String message);
-    List<AlertLog> getLogs(Long warrantyId);
+  AlertLog addLog(Long warrantyId, String message);
+  List<AlertLog> getLogs(Long warrantyId);
 }
