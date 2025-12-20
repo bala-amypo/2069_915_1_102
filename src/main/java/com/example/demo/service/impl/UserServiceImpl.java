@@ -4,6 +4,7 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // ✅ Constructor expected by tests (only UserRepository)
+    public UserServiceImpl(UserRepository repo) {
+        this.userRepository = repo;
+        // Instantiate encoder locally so tests don’t need to inject it
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    // Optional: keep a second constructor for Spring DI if you want
     public UserServiceImpl(UserRepository repo, PasswordEncoder encoder) {
         this.userRepository = repo;
-        this.passwordEncoder = encoder;
+        this.passwordEncoder = encoder != null ? encoder : new BCryptPasswordEncoder();
     }
 
     @Override
