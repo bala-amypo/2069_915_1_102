@@ -16,7 +16,7 @@ public class JwtTokenProvider {
     }
 
     public DummyClaims getClaims() {
-        return n;
+        return null;
     }
 
     public static class DummyClaims {
