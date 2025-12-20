@@ -6,17 +6,20 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "alert_logs")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class AlertLog {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String message;
-    private LocalDateTime sentAt;
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne private Warranty warranty;
+  @ManyToOne
+  private Warranty warranty;
 
-    @PrePersist
-    public void prePersist() {
-        this.sentAt = LocalDateTime.now();
-    }
+  private LocalDateTime sentAt;
+  private String message;
+
+  @PrePersist
+  public void prePersist() {
+    if (sentAt == null) sentAt = LocalDateTime.now();
+  }
 }
