@@ -12,11 +12,28 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
-        return true;
+        return false; // or return true if you prefer, but null is not valid for boolean
     }
 
-    public String getClaims(String token) {
+    public Claims getClaims(String token) {
         return null;
     }
 
+    // Inner placeholder class
+    public static class Claims {
+        public Body getBody() {
+            return null;
+        }
+    }
+
+    // Inner placeholder class
+    public static class Body {
+        public Integer get(String key, Class<Integer> type) {
+            return null;
+        }
+
+        public String get(String key) {
+            return null;
+        }
+    }
 }
