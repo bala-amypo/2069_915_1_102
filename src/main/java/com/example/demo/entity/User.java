@@ -3,7 +3,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.ArrayList;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
