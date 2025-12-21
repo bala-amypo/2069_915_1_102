@@ -14,25 +14,25 @@ public class Warranty {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  // Owning side: many warranties belong to one user
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  // Owning side: many warranties belong to one product
+  @ManyToOne
+  @JoinColumn(name = "product_id", nullable = false)
+  private Product product;
+
   private LocalDate purchaseDate;
   private LocalDate expiryDate;
   private String serialNumber; // Service should enforce uniqueness
 
-  // One warranty can have many schedules via join table
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinTable(
-      name = "warranty_schedules",
-      joinColumns = @JoinColumn(name = "warranty_id"),
-      inverseJoinColumns = @JoinColumn(name = "schedule_id")
-  )
+  // One warranty can have many schedules
+  @OneToMany(mappedBy = "warranty", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<AlertSchedule> schedules = new ArrayList<>();
 
-  // One warranty can have many logs via join table
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinTable(
-      name = "warranty_logs",
-      joinColumns = @JoinColumn(name = "warranty_id"),
-      inverseJoinColumns = @JoinColumn(name = "log_id")
-  )
+  // One warranty can have many logs
+  @OneToMany(mappedBy = "warranty", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<AlertLog> logs = new ArrayList<>();
 }

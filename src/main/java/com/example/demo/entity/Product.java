@@ -26,12 +26,7 @@ public class Product {
   @Column(nullable = false)
   private String category;
 
-  // One product may appear in many warranties via join table
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinTable(
-      name = "product_warranties",
-      joinColumns = @JoinColumn(name = "product_id"),
-      inverseJoinColumns = @JoinColumn(name = "warranty_id")
-  )
+  // One product may appear in many warranties
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Warranty> warranties = new ArrayList<>();
 }

@@ -12,6 +12,10 @@ public class AlertLog {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @ManyToOne
+  @JoinColumn(name = "warranty_id", nullable = false)
+  private Warranty warranty;
+
   private LocalDateTime sentAt;
   private String message;
 
