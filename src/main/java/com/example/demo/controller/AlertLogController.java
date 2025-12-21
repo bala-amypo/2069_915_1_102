@@ -1,6 +1,5 @@
 // src/main/java/com/example/demo/controller/AlertLogController.java
 package com.example.demo.controller;
-
 import com.example.demo.entity.AlertLog;
 import com.example.demo.service.AlertLogService;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +9,9 @@ import java.util.List;
 @RequestMapping("/logs")
 public class AlertLogController {
     private final AlertLogService alertLogService;
-    public AlertLogController(AlertLogService s) { this.alertLogService = s; }
+    public AlertLogController(AlertLogService s) { 
+        this.alertLogService = s; 
+    }
 
     @PostMapping("/{warrantyId}")
     public AlertLog addLog(@PathVariable Long warrantyId, @RequestBody String message) {

@@ -10,7 +10,7 @@ import java.util.List;
 @RequestMapping("/schedules")
 public class AlertScheduleController {
     private final AlertScheduleService alertScheduleService;
-    public AlertScheduleController(AlertScheduleService s) { this.alertScheduleService = s; }
+    public AlertScheduleController(AlertScheduleService s){ this.alertScheduleService = s; }
 
     @PostMapping("/{warrantyId}")
     public AlertSchedule createSchedule(@PathVariable Long warrantyId, @RequestBody AlertSchedule schedule) {
