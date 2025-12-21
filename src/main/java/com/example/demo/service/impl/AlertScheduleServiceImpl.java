@@ -25,7 +25,7 @@ public class AlertScheduleServiceImpl implements AlertScheduleService {
 
     Integer days = schedule.getDaysBeforeExpiry();
     if (days != null && days < 0) {
-      throw new IllegalArgumentException("daysBeforeExpiry must be >= 0");
+      throw new IllegalArgumentException("daysBeforeExpiry must be greater than or equal 0");
     }
 
     schedule.setWarranty(warranty);
