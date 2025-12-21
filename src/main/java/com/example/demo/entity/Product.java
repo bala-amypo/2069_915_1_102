@@ -1,10 +1,10 @@
-// src/main/java/com/example/demo/entity/Product.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 @Entity
@@ -12,20 +12,21 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Product {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @NotBlank(message = "Brand is required")
-  private String brand;
+    @NotBlank(message = "Brand is required")
+    private String brand;
 
-  @NotBlank(message = "Model number required")
-  @Column(unique = true)
-  private String modelNumber;
+    @NotBlank(message = "Model number is required")
+    @Column(unique = true)
+    private String modelNumber;
 
-  @NotBlank(message = "Category required")
-  private String category;
+    @NotBlank(message = "Category is required")
+    private String category;
 
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Warranty> warranties = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    @JsonIgnoreProperties("product")   // ✅ prevents recursion Product ↔ Warranty
+    private List<Warranty> warranties;
 }

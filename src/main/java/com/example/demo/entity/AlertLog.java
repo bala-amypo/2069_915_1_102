@@ -1,9 +1,10 @@
-// src/main/java/com/example/demo/entity/AlertLog.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,26 +12,22 @@ import java.time.LocalDateTime;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class AlertLog {
 
-  // Primary key
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  // Many-to-one relationship: each warranty can have multiple logs
-  @ManyToOne
-  @JoinColumn(name = "warranty_id", nullable = false)
-  private Warranty warranty;
+    private LocalDateTime sentAt;
 
-  // Auto-generated timestamp when alert is sent/simulated
-  private LocalDateTime sentAt;
+    @NotBlank(message = "Message is required")
+    private String message;
 
-  // Message/body of the alert
-  @NotBlank(message = "Message is required")
-  private String message;
+    @ManyToOne
+    @JoinColumn(name = "warranty_id", nullable = false)
+    @JsonIgnoreProperties({"schedules", "logs"})   // ✅ prevents recursion AlertLog ↔ Warranty
+    private Warranty warranty;
 
-  // Auto-set sentAt before persisting
-  @PrePersist
-  public void prePersist() {
-    this.sentAt = LocalDateTime.now();
-  }
+    @PrePersist
+    public void prePersist() {
+        this.sentAt = LocalDateTime.now();
+    }
 }

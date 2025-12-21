@@ -1,11 +1,11 @@
-// src/main/java/com/example/demo/entity/Warranty.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,32 +13,35 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Warranty {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+    @NotNull(message = "Purchase date is required")
+    private LocalDate purchaseDate;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id", nullable = false)
-  private Product product;
+    @Future(message = "Expiry date must be after purchase date")
+    private LocalDate expiryDate;
 
-  @NotNull(message = "Purchase date is required")
-  private LocalDate purchaseDate;
+    @NotBlank(message = "Serial number required")
+    @Column(unique = true)
+    private String serialNumber;
 
-  @NotNull(message = "Expiry date is required")
-  @Future(message = "Expiry date must be after purchase date")
-  private LocalDate expiryDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties("warranties")   // ✅ prevents recursion Warranty ↔ User
+    private User user;
 
-  @NotBlank(message = "Serial number required")
-  @Column(unique = true)
-  private String serialNumber;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnoreProperties("warranties")   // ✅ prevents recursion Warranty ↔ Product
+    private Product product;
 
-  @OneToMany(mappedBy = "warranty", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<AlertSchedule> schedules = new ArrayList<>();
+    @OneToMany(mappedBy = "warranty")
+    @JsonIgnoreProperties("warranty")   // ✅ prevents recursion Warranty ↔ AlertSchedule
+    private List<AlertSchedule> schedules;
 
-  @OneToMany(mappedBy = "warranty", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<AlertLog> logs = new ArrayList<>();
+    @OneToMany(mappedBy = "warranty")
+    @JsonIgnoreProperties("warranty")   // ✅ prevents recursion Warranty ↔ AlertLog
+    private List<AlertLog> logs;
 }

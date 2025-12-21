@@ -1,10 +1,12 @@
-// src/main/java/com/example/demo/entity/User.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -25,7 +27,10 @@ public class User {
     @NotBlank(message = "Password is required")
     private String password;
 
-    // ✅ Added role field
     @NotBlank(message = "Role is required")
-    private String role; // USER or ADMIN
+    private String role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")   // ✅ prevents recursion User ↔ Warranty
+    private List<Warranty> warranties;
 }
