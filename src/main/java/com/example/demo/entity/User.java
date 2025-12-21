@@ -8,15 +8,20 @@ import lombok.*;
 @Table(name = "users")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class User {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private String name;
+    private String name;
 
-  @Column(unique = true)
-  private String email;
+    @Column(unique = true)
+    private String email;
 
-  private String password;
+    private String password;
 
-  private String role; // "USER" or "ADMIN"
+    private String role; // "USER" or "ADMIN"
+
+    // One user can have many warranties
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Warranty> warranties = new ArrayList<>();
 }
