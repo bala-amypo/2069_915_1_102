@@ -20,6 +20,8 @@ public class AlertLog {
 
   @PrePersist
   public void prePersist() {
-    if (sentAt == null) sentAt = LocalDateTime.now();
+    if (sentAt == null) {
+      sentAt = LocalDateTime.now();
+    }
   }
 }
