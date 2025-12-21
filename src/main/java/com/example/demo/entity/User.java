@@ -21,12 +21,7 @@ public class User {
 
     private String role; // "USER" or "ADMIN"
 
-    // One user can have many warranties via join table
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(
-        name = "user_warranties",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "warranty_id")
-    )
+    // One user can have many warranties
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Warranty> warranties = new ArrayList<>();
 }
