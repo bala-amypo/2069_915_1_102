@@ -5,8 +5,6 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,11 +23,10 @@ public class UserServiceImpl implements UserService {
     if (user.getRole() == null || user.getRole().isBlank()) {
       user.setRole("USER");
     }
-    // Simple taught-scope encoding (no security frameworks): just ensure not equal to raw
+    // Save password exactly as provided (no encoding/encryption)
+    // Just ensure it's not null
     if (user.getPassword() != null) {
-      String encoded = Base64.getEncoder()
-        .encodeToString(("ENC:" + user.getPassword()).getBytes(StandardCharsets.UTF_8));
-      user.setPassword(encoded);
+      user.setPassword(user.getPassword());
     }
     return userRepository.save(user);
   }
