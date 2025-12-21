@@ -1,5 +1,7 @@
 package com.example.demo.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,7 +15,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handles validation errors triggered by @Valid annotations in entities/DTOs
+    // Handles validation errors triggered by @Valid annotations in controllers
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -21,6 +23,19 @@ public class GlobalExceptionHandler {
         // ✅ Using .forEach() to collect all field errors
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    // Handles validation errors triggered at persist time (Hibernate/JPA)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleConstraintViolation(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        // ✅ Using .forEach() to collect all constraint violations
+        ex.getConstraintViolations().forEach(violation -> {
+            errors.put(violation.getPropertyPath().toString(), violation.getMessage());
         });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
