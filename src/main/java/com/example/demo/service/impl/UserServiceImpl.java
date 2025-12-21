@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/service/impl/UserServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
@@ -20,9 +19,18 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
+
+        // ✅ Role validation
         if (user.getRole() == null || user.getRole().isBlank()) {
-            user.setRole("USER");
+            user.setRole("USER"); // default role
+        } else {
+            String role = user.getRole().toUpperCase();
+            if (!role.equals("USER") && !role.equals("ADMIN")) {
+                throw new IllegalArgumentException("Role must be either USER or ADMIN");
+            }
+            user.setRole(role); // normalize to uppercase
         }
+
         // Password handling left as-is
         return userRepository.save(user);
     }
