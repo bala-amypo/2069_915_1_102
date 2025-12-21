@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/entity/AlertLog.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -9,11 +8,9 @@ import java.time.LocalDateTime;
 @Table(name = "alert_logs")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class AlertLog {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @ManyToOne
-  private Warranty warranty;
 
   private LocalDateTime sentAt;
   private String message;

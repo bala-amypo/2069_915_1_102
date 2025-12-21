@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/entity/User.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -22,7 +21,12 @@ public class User {
 
     private String role; // "USER" or "ADMIN"
 
-    // One user can have many warranties
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    // One user can have many warranties via join table
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+        name = "user_warranties",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "warranty_id")
+    )
     private List<Warranty> warranties = new ArrayList<>();
 }

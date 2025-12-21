@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/entity/Product.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -17,18 +16,22 @@ public class Product {
   private Long id;
 
   private String name;
-
   private String brand;
 
   @NotBlank(message = "Model number required")
   @Column(nullable = false)
-  private String modelNumber;  // must not be null/blank
+  private String modelNumber;
 
   @NotBlank(message = "Category required")
   @Column(nullable = false)
-  private String category;     // must not be null/blank
+  private String category;
 
-  // One product may appear in many warranties (inverse side)
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+  // One product may appear in many warranties via join table
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinTable(
+      name = "product_warranties",
+      joinColumns = @JoinColumn(name = "product_id"),
+      inverseJoinColumns = @JoinColumn(name = "warranty_id")
+  )
   private List<Warranty> warranties = new ArrayList<>();
 }

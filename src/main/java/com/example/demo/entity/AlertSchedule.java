@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/entity/AlertSchedule.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -8,11 +7,9 @@ import lombok.*;
 @Table(name = "alert_schedules")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class AlertSchedule {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @ManyToOne
-  private Warranty warranty;
 
   private Integer daysBeforeExpiry;
   private Boolean enabled;
