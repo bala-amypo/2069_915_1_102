@@ -7,27 +7,38 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // Handles validation errors triggered by @Valid annotations in entities/DTOs
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException ex) {
-        // Get the first error message only
-        FieldError error = ex.getBindingResult().getFieldErrors();
-        String message = error.getDefaultMessage(); // e.g. "Valid email required"
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        // ✅ Using .forEach() to collect all field errors
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     // Handles not found errors
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("resource", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     // Fallback for other runtime exceptions
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntime(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleRuntime(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
