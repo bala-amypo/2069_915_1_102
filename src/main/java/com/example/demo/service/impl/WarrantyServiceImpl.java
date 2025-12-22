@@ -10,6 +10,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WarrantyRepository;
 import com.example.demo.service.WarrantyService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -19,7 +20,9 @@ public class WarrantyServiceImpl implements WarrantyService {
     private final ProductRepository productRepo;
 
     public WarrantyServiceImpl(WarrantyRepository w, UserRepository u, ProductRepository p) {
-        this.warrantyRepo = w; this.userRepo = u; this.productRepo = p;
+        this.warrantyRepo = w;
+        this.userRepo = u;
+        this.productRepo = p;
     }
 
     @Override
@@ -29,8 +32,17 @@ public class WarrantyServiceImpl implements WarrantyService {
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+        // ✅ Serial number uniqueness check
         if (warrantyRepo.existsBySerialNumber(request.getSerialNumber())) {
-            throw new IllegalArgumentException("Serial number must be unique");
+            throw new IllegalArgumentException("Serial number must be unique.");
+        }
+
+        // ✅ Expiry date validation
+        if (request.getExpiryDate() == null || request.getPurchaseDate() == null) {
+            throw new IllegalArgumentException("Purchase date and expiry date are required.");
+        }
+        if (!request.getExpiryDate().isAfter(request.getPurchaseDate())) {
+            throw new IllegalArgumentException("Expiry date must be after purchase date.");
         }
 
         request.setUser(user);
