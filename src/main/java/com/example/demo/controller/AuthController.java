@@ -31,7 +31,6 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
-        // Simple check: in real apps use encoder, but here keep syllabus scope
         if (user.getPassword().equals(request.getPassword())) {
             return new AuthResponse(user.getId(), user.getEmail(), user.getRole());
         }
