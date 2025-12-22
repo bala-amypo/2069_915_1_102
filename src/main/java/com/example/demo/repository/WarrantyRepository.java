@@ -12,7 +12,6 @@ public interface WarrantyRepository extends JpaRepository<Warranty, Long> {
 
   List<Warranty> findByExpiryDateBetween(LocalDate from, LocalDate to);
 
-  // Adapter to keep the test-required method name without @Query
   default List<Warranty> findWarrantiesExpiringBetween(LocalDate from, LocalDate to) {
     return findByExpiryDateBetween(from, to);
   }

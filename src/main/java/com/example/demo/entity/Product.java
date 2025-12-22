@@ -27,6 +27,6 @@ public class Product {
     private String category;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product")   // ✅ prevents recursion Product ↔ Warranty
+    @JsonIgnoreProperties("product")   
     private List<Warranty> warranties;
 }

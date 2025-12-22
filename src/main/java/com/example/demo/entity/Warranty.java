@@ -29,19 +29,19 @@ public class Warranty {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnoreProperties("warranties")   // ✅ prevents recursion Warranty ↔ User
+    @JsonIgnoreProperties("warranties")   
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @JsonIgnoreProperties("warranties")   // ✅ prevents recursion Warranty ↔ Product
+    @JsonIgnoreProperties("warranties")   
     private Product product;
 
     @OneToMany(mappedBy = "warranty")
-    @JsonIgnoreProperties("warranty")   // ✅ prevents recursion Warranty ↔ AlertSchedule
+    @JsonIgnoreProperties("warranty")   
     private List<AlertSchedule> schedules;
 
     @OneToMany(mappedBy = "warranty")
-    @JsonIgnoreProperties("warranty")   // ✅ prevents recursion Warranty ↔ AlertLog
+    @JsonIgnoreProperties("warranty")   
     private List<AlertLog> logs;
 }

@@ -24,6 +24,6 @@ public class AlertSchedule {
 
     @ManyToOne
     @JoinColumn(name = "warranty_id", nullable = false)
-    @JsonIgnoreProperties({"schedules", "logs"})   // ✅ prevents recursion AlertSchedule ↔ Warranty
+    @JsonIgnoreProperties({"schedules", "logs"})  
     private Warranty warranty;
 }

@@ -31,6 +31,6 @@ public class User {
     private String role;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")   // ✅ prevents recursion User ↔ Warranty
+    @JsonIgnoreProperties("user")   
     private List<Warranty> warranties;
 }
