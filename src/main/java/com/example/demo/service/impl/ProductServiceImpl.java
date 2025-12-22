@@ -15,7 +15,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-        // Validation handled via @NotBlank in Product entity
         return repo.save(product);
     }
 

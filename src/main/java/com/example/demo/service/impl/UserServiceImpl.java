@@ -20,18 +20,17 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        // ✅ Role validation
         if (user.getRole() == null || user.getRole().isBlank()) {
-            user.setRole("USER"); // default role
+            user.setRole("USER"); 
         } else {
             String role = user.getRole().toUpperCase();
             if (!role.equals("USER") && !role.equals("ADMIN")) {
                 throw new IllegalArgumentException("Role must be either USER or ADMIN");
             }
-            user.setRole(role); // normalize to uppercase
+            user.setRole(role); 
         }
 
-        // Password handling left as-is
+        
         return userRepository.save(user);
     }
 
