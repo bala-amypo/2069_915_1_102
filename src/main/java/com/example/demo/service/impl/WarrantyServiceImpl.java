@@ -32,12 +32,10 @@ public class WarrantyServiceImpl implements WarrantyService {
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        // ✅ Serial number uniqueness check
         if (warrantyRepo.existsBySerialNumber(request.getSerialNumber())) {
             throw new IllegalArgumentException("Serial number must be unique.");
         }
 
-        // ✅ Expiry date validation
         if (request.getExpiryDate() == null || request.getPurchaseDate() == null) {
             throw new IllegalArgumentException("Purchase date and expiry date are required.");
         }
