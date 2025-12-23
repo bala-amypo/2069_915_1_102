@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/security/JwtTokenProvider.java
 package com.example.demo.security;
 
 import com.example.demo.config.JwtProperties;
@@ -10,7 +9,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-@Component   // <-- registers as a Spring bean
+@Component   // registers as a Spring bean
 public class JwtTokenProvider {
 
     private final SecretKey key;
@@ -31,26 +30,27 @@ public class JwtTokenProvider {
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(key, Jwts.SIG.HS256)
+                .signWith(key, SignatureAlgorithm.HS256)   // ✅ fixed
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser()
-                .verifyWith(key)
+            Jwts.parserBuilder()                          // ✅ fixed
+                .setSigningKey(key)
                 .build()
-                .parseSignedClaims(token);
+                .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
             return false;
         }
     }
 
-    public Jws<Claims> getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
+    public Claims getClaims(String token) {
+        return Jwts.parserBuilder()                      // ✅ fixed
+                .setSigningKey(key)
                 .build()
-                .parseSignedClaims(token);
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
