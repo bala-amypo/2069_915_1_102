@@ -1,4 +1,3 @@
-1.	CONFIG:
 
 2.	// src/main/java/com/example/demo/config/JwtProperties.java
 3.	package com.example.demo.config;
