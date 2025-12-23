@@ -26,14 +26,14 @@ public class JwtTokenProvider {
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret()) // ✅ old style
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret()) // ✅ 0.9.1 style
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret()) // ✅ old style
+                .setSigningKey(jwtProperties.getSecret()) // ✅ 0.9.1 style
                 .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
@@ -41,9 +41,10 @@ public class JwtTokenProvider {
         }
     }
 
+    // ✅ Must return Jws<Claims> so tests can call .getBody()
     public Jws<Claims> getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret()) // ✅ old style
+                .setSigningKey(jwtProperties.getSecret()) // ✅ 0.9.1 style
                 .parseClaimsJws(token);
     }
 }
