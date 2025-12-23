@@ -1,7 +1,10 @@
 package com.example.demo.security;
 
 import com.example.demo.config.JwtProperties;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -30,16 +33,15 @@ public class JwtTokenProvider {
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, key) // old API style
                 .compact();
     }
 
     // ✅ Validate JWT token
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
+            Jwts.parser()
                 .setSigningKey(key)
-                .build()
                 .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
@@ -49,9 +51,8 @@ public class JwtTokenProvider {
 
     // 📥 Extract claims
     public Claims getClaims(String token) {
-        return Jwts.parserBuilder()
+        return Jwts.parser()
                 .setSigningKey(key)
-                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
