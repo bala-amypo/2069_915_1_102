@@ -10,7 +10,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -31,6 +35,16 @@ public class User {
     private String role;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")   
+    @JsonIgnoreProperties("user")
     private List<Warranty> warranties;
+
+    // ✅ Explicit constructor for test cases
+    public User(Long id, String name, String email, String password, String role, List<Warranty> warranties) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.warranties = warranties;
+    }
 }

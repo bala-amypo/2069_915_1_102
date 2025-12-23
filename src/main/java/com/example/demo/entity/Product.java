@@ -9,12 +9,19 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name is required")
+    private String name; // ✅ Added to support setName/getName in tests
 
     @NotBlank(message = "Brand is required")
     private String brand;
@@ -27,6 +34,6 @@ public class Product {
     private String category;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product")   
+    @JsonIgnoreProperties("product")
     private List<Warranty> warranties;
 }
