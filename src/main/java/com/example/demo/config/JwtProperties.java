@@ -7,7 +7,16 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
 
+    /**
+     * Secret key used for signing JWT tokens.
+     * Configured in application.properties as jwt.secret
+     */
     private String secret;
+
+    /**
+     * Expiration time in milliseconds.
+     * Configured in application.properties as jwt.expirationMs
+     */
     private long expirationMs;
 
     public String getSecret() {
