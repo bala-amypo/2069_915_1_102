@@ -1,45 +1,30 @@
-// src/main/java/com/example/demo/service/impl/AlertScheduleServiceImpl.java
+// src/main/java/com/example/demo/service/impl/ProductServiceImpl.java
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.AlertSchedule;
-import com.example.demo.entity.Warranty;
-import com.example.demo.repository.AlertScheduleRepository;
-import com.example.demo.repository.WarrantyRepository;
-import com.example.demo.service.AlertScheduleService;
+import com.example.demo.entity.Product;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AlertScheduleServiceImpl implements AlertScheduleService {
+public class ProductServiceImpl implements ProductService {
+    private final ProductRepository repo;
 
-    private final AlertScheduleRepository scheduleRepository;
-    private final WarrantyRepository warrantyRepository;
-
-    public AlertScheduleServiceImpl(AlertScheduleRepository scheduleRepository,
-                                    WarrantyRepository warrantyRepository) {
-        this.scheduleRepository = scheduleRepository;
-        this.warrantyRepository = warrantyRepository;
-    }
+    public ProductServiceImpl(ProductRepository repo) { this.repo = repo; }
 
     @Override
-    public AlertSchedule createSchedule(Long warrantyId, AlertSchedule schedule) {
-        Warranty warranty = warrantyRepository.findById(warrantyId)
-                .orElseThrow(() -> new RuntimeException("Warranty not found"));
-
-        Integer days = schedule.getDaysBeforeExpiry();
-        if (days != null && days < 0) {
-            throw new IllegalArgumentException("daysBeforeExpiry must be >= 0");
+    public Product addProduct(Product product) {
+        if (product.getModelNumber() == null || product.getModelNumber().isBlank()) {
+            throw new IllegalArgumentException("Model number required");
         }
-
-        schedule.setWarranty(warranty);
-        return scheduleRepository.save(schedule);
+        if (product.getCategory() == null || product.getCategory().isBlank()) {
+            throw new IllegalArgumentException("Category required");
+        }
+        return repo.save(product);
     }
 
     @Override
-    public List<AlertSchedule> getSchedules(Long warrantyId) {
-        warrantyRepository.findById(warrantyId)
-                .orElseThrow(() -> new RuntimeException("Warranty not found"));
-        return scheduleRepository.findByWarrantyId(warrantyId);
-    }
+    public List<Product> getAllProducts() { return repo.findAll(); }
 }

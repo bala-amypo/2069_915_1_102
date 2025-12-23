@@ -4,7 +4,6 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Warranty;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WarrantyRepository;
@@ -20,29 +19,19 @@ public class WarrantyServiceImpl implements WarrantyService {
     private final ProductRepository productRepo;
 
     public WarrantyServiceImpl(WarrantyRepository w, UserRepository u, ProductRepository p) {
-        this.warrantyRepo = w;
-        this.userRepo = u;
-        this.productRepo = p;
+        this.warrantyRepo = w; this.userRepo = u; this.productRepo = p;
     }
 
     @Override
     public Warranty registerWarranty(Long userId, Long productId, Warranty request) {
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-        if (warrantyRepo.existsBySerialNumber(request.getSerialNumber())) {
-            throw new IllegalArgumentException("Serial number must be unique.");
-        }
-
-        if (request.getExpiryDate() == null || request.getPurchaseDate() == null) {
-            throw new IllegalArgumentException("Purchase date and expiry date are required.");
-        }
+        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Product product = productRepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
         if (!request.getExpiryDate().isAfter(request.getPurchaseDate())) {
-            throw new IllegalArgumentException("Expiry date must be after purchase date.");
+            throw new IllegalArgumentException("Expiry date must be after purchase date");
         }
-
+        if (warrantyRepo.existsBySerialNumber(request.getSerialNumber())) {
+            throw new IllegalArgumentException("Serial number must be unique");
+        }
         request.setUser(user);
         request.setProduct(product);
         return warrantyRepo.save(request);
@@ -55,7 +44,6 @@ public class WarrantyServiceImpl implements WarrantyService {
 
     @Override
     public Warranty getWarranty(Long id) {
-        return warrantyRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Warranty not found"));
+        return warrantyRepo.findById(id).orElseThrow(() -> new RuntimeException("Warranty not found"));
     }
 }
