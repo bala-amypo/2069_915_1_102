@@ -1,55 +1,56 @@
+// src/main/java/com/example/demo/security/JwtTokenProvider.java
 package com.example.demo.security;
 
 import com.example.demo.config.JwtProperties;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-@Component
+@Component   // <-- registers as a Spring bean
 public class JwtTokenProvider {
 
-    private final JwtProperties jwtProperties;
+    private final SecretKey key;
+    private final long expirationMs;
 
-    // Spring injects JwtProperties automatically
-    public JwtTokenProvider(JwtProperties jwtProperties) {
-        this.jwtProperties = jwtProperties;
+    public JwtTokenProvider(JwtProperties properties) {
+        this.key = Keys.hmacShaKeyFor(properties.getSecret().getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = properties.getExpirationMs();
     }
 
     public String createToken(Long userId, String email, String role) {
         Date now = new Date();
-        Date exp = new Date(now.getTime() + jwtProperties.getExpirationMs());
+        Date exp = new Date(now.getTime() + expirationMs);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
                 .claim("userId", userId)
                 .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret())
+                .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
-                .parseClaimsJws(token);
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException | IllegalArgumentException ex) {
             return false;
         }
     }
 
-    // Return Jws<Claims> so tests can call .getBody()
     public Jws<Claims> getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
-                .parseClaimsJws(token);
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
     }
 }
