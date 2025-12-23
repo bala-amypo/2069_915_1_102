@@ -1,39 +1,57 @@
 package com.example.demo.security;
-package com.example.demo.config;
 
-import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.config.JwtProperties;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+@Component
 public class JwtTokenProvider {
-    public JwtTokenProvider(JwtProperties props) {
-        // Accept config, do nothing
+
+    private final SecretKey key;
+    private final long expirationMs;
+
+    public JwtTokenProvider(JwtProperties properties) {
+        this.key = Keys.hmacShaKeyFor(
+                properties.getSecret().getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = properties.getExpirationMs();
     }
 
     public String createToken(Long userId, String email, String role) {
-        return null;
+
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + expirationMs);
+
+        return Jwts.builder()
+                .claim("userId", userId)
+                .claim("email", email)
+                .claim("role", role)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(key, Jwts.SIG.HS256)
+                .compact();
     }
 
     public boolean validateToken(String token) {
-        return false; // or return true if you prefer, but null is not valid for boolean
-    }
-
-    public Claims getClaims(String token) {
-        return null;
-    }
-
-    // Inner placeholder class
-    public static class Claims {
-        public Body getBody() {
-            return null;
+        try {
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException ex) {
+            return false;
         }
     }
 
-    // Inner placeholder class
-    public static class Body {
-        public Integer get(String key, Class<Integer> type) {
-            return null;
-        }
-
-        public String get(String key) {
-            return null;
-        }
+    public Jws<Claims> getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
     }
 }
