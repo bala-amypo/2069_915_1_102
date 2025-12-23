@@ -15,6 +15,7 @@ public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
 
+    // Spring injects JwtProperties automatically
     public JwtTokenProvider(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
     }

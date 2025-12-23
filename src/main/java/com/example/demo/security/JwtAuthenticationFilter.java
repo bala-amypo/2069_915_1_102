@@ -20,6 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    // Spring injects JwtTokenProvider automatically
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -35,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             if (jwtTokenProvider.validateToken(token)) {
-                // ✅ getClaims returns Jws<Claims>, so extract body
                 Jws<Claims> claimsJws = jwtTokenProvider.getClaims(token);
                 Claims claims = claimsJws.getBody();
 
