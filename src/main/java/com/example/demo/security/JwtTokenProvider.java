@@ -1,4 +1,7 @@
 package com.example.demo.security;
+package com.example.demo.config;
+
+import com.example.demo.security.JwtTokenProvider;
 public class JwtTokenProvider {
     public JwtTokenProvider(JwtProperties props) {
         // Accept config, do nothing
