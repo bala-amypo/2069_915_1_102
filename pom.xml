@@ -52,7 +52,19 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+  <!-- JAXB API -->
+  <dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>3.0.1</version>
+  </dependency>
 
+    <!-- JAXB Implementation -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>3.0.2</version>
+    </dependency>
         <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
