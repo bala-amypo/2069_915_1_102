@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/security/JwtTokenProvider.java
 package com.example.demo.security;
 
 import com.example.demo.config.JwtProperties;
@@ -21,20 +22,20 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
-                // ✅ store userId as Integer so test passes
+                // Store userId as Integer to match tests retrieving Integer.class
                 .claim("userId", userId.intValue())
                 .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret())
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret()) // 0.9.1 style
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
+                .setSigningKey(jwtProperties.getSecret()) // 0.9.1 style
                 .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
@@ -42,10 +43,10 @@ public class JwtTokenProvider {
         }
     }
 
-    // ✅ return Jws<Claims> so .getBody() works in tests
+    // Return Jws<Claims> so tests can call .getBody()
     public Jws<Claims> getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
+                .setSigningKey(jwtProperties.getSecret()) // 0.9.1 style
                 .parseClaimsJws(token);
     }
 }
