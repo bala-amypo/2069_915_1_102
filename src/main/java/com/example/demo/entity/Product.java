@@ -35,7 +35,6 @@ public class Product {
     @JsonIgnoreProperties("product")
     private List<Warranty> warranties;
 
-    // 5-arg constructor used in tests
     public Product(Long id, String name, String brand, String modelNumber, String category) {
         this.id = id;
         this.name = name;
