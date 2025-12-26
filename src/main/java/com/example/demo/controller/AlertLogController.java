@@ -1,16 +1,19 @@
-// src/main/java/com/example/demo/controller/AlertLogController.java
 package com.example.demo.controller;
+
 import com.example.demo.entity.AlertLog;
 import com.example.demo.service.AlertLogService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/logs")
 public class AlertLogController {
     private final AlertLogService alertLogService;
-    public AlertLogController(AlertLogService s) { 
-        this.alertLogService = s; 
+    public AlertLogController(AlertLogService s) {
+        this.alertLogService = s;
     }
 
     @PostMapping("/{warrantyId}")

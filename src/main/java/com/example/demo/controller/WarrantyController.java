@@ -1,16 +1,20 @@
-// src/main/java/com/example/demo/controller/WarrantyController.java
 package com.example.demo.controller;
 
 import com.example.demo.entity.Warranty;
 import com.example.demo.service.WarrantyService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/warranties")
 public class WarrantyController {
     private final WarrantyService warrantyService;
-    public WarrantyController(WarrantyService warrantyService) { this.warrantyService = warrantyService; }
+    public WarrantyController(WarrantyService warrantyService) {
+        this.warrantyService = warrantyService;
+    }
 
     @PostMapping("/register/{userId}/{productId}")
     public Warranty registerWarranty(@PathVariable Long userId,
