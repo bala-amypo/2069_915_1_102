@@ -3,6 +3,8 @@ package com.example.demo.config;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +23,15 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                // You need to change the port as per your server
+                .info(new Info()
+                        .title("Digital Warranty Tracker API")
+                        .version("v1")
+                        .description("API documentation with JWT authentication"))
+                // ✅ Point to your API base, not swagger-ui HTML
                 .servers(List.of(
-                        new Server().url("https://9084.408procr.amypo.ai/swagger-ui/index.html")
-                ));
-        }
+                        new Server().url("https://9084.408procr.amypo.ai/")
+                ))
+                // ✅ Require bearerAuth globally
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+    }
 }
