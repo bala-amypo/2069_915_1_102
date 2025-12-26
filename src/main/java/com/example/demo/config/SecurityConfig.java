@@ -38,8 +38,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/register", "/auth/login",
                                  "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/products/**", "/warranties/**", "/schedules/**", "/logs/**").authenti()
-                // .anyRequest().authenticated()
+                .requestMatchers("/products/**", "/warranties/**", "/schedules/**", "/logs/**").authenticated()
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter,
                 org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
