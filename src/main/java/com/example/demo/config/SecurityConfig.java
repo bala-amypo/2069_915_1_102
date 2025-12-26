@@ -36,7 +36,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/register", "/auth/login").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/products/**", "/warranties/**", "/schedules/**", "/logs/**").authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter,
