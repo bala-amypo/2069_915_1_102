@@ -36,11 +36,7 @@ public class AuthController {
                 .build();
 
         User saved = userService.register(user);
-
-        // Generate JWT token for the newly registered user
         String token = jwtTokenProvider.createToken(saved.getId(), saved.getEmail(), saved.getRole());
-
-        // Return token + user info
         return new AuthResponse(token, saved.getId(), saved.getEmail(), saved.getRole());
     }
 

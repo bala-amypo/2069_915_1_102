@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/config/JwtProperties.java
 package com.example.demo.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

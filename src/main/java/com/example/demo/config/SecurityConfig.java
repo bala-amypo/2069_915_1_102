@@ -34,15 +34,9 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Allow registration and login without authentication
-                .requestMatchers("/auth/register", "/auth/login",
-                                 "/swagger-ui/index.html/auth/register",
-                                 "/swagger-ui/index.html/auth/login").permitAll()
-                // Allow Swagger UI and API docs
+                .requestMatchers("/auth/register", "/auth/login").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                // Protect your business endpoints
                 .requestMatchers("/products/**", "/warranties/**", "/schedules/**", "/logs/**").authenticated()
-                // Any other request must be authenticated
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter,
