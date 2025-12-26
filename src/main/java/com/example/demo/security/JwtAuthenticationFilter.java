@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/security/JwtAuthenticationFilter.java
 package com.example.demo.security;
 
 import io.jsonwebtoken.Claims;
@@ -24,6 +23,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/auth/register")
+            || path.startsWith("/auth/login")
+            || path.startsWith("/swagger-ui")
+            || path.startsWith("/v3/api-docs");
     }
 
     @Override

@@ -39,7 +39,9 @@ public class AuthController {
 
         // Generate JWT token for the newly registered user
         String token = jwtTokenProvider.createToken(saved.getId(), saved.getEmail(), saved.getRole());
-        return new AuthResponse(token);
+
+        // Return token + user info
+        return new AuthResponse(token, saved.getId(), saved.getEmail(), saved.getRole());
     }
 
     @PostMapping("/login")
@@ -47,7 +49,7 @@ public class AuthController {
         User user = userService.findByEmail(request.getEmail());
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
-            return new AuthResponse(token);
+            return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     }
