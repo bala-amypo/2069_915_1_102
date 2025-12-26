@@ -7,6 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT"
+)
 public class SwaggerConfig {
 
     @Bean
@@ -17,11 +23,4 @@ public class SwaggerConfig {
                         new Server().url("https://9084.408procr.amypo.ai/swagger-ui/index.html")
                 ));
         }
-
-    @SecurityScheme(
-    name = "bearerAuth",
-    type = SecuritySchemeType.HTTP,
-    scheme = "bearer",
-    bearerFormat = "JWT"
-)
 }
