@@ -38,7 +38,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/register", "/auth/login",
                                  "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/products/**", "/warranties/**", "/schedules/**", "/logs/**").authenticated()
+                .requestMatchers("/products/**", "/warranties/**", "/schedules/**", "/logs/**").permitAll()
                 // .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter,
