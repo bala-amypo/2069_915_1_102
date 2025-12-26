@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
-import com.example.demo.dto.RegisterResponse;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
@@ -29,7 +28,7 @@ public class AuthController {
 
     // ✅ Register only saves user, no token returned
     @PostMapping("/register")
-    public RegisterResponse register(@RequestBody RegisterRequest request) {
+    public User register(@RequestBody RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -37,30 +36,18 @@ public class AuthController {
                 .role(request.getRole() != null ? request.getRole() : "USER")
                 .build();
 
-        User saved = userService.register(user);
-        return new RegisterResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole());
+        return userService.register(user);
     }
 
     // ✅ Token is created only on login
     @PostMapping("/login")
-public AuthResponse login(@RequestBody AuthRequest request) {
-    System.out.println("[DEBUG] login email=" + request.getEmail());
+    public AuthResponse login(@RequestBody AuthRequest request) {
+        User user = userService.findByEmail(request.getEmail());
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        }
 
-    User user = userService.findByEmail(request.getEmail());
-    if (user == null) {
-        System.out.println("[DEBUG] user not found in DB");
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
-
-    System.out.println("[DEBUG] dbHash=" + user.getPassword());
-    boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-    System.out.println("[DEBUG] matches=" + matches);
-
-    if (!matches) {
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
-    }
-
-    String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
-    return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
-}
 }
