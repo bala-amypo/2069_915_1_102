@@ -17,4 +17,11 @@ public class SwaggerConfig {
                         new Server().url("https://9084.408procr.amypo.ai/swagger-ui/index.html")
                 ));
         }
+
+    @SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT"
+)
 }
