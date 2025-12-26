@@ -26,8 +26,9 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ✅ Register only saves user, no token returned
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody RegisterRequest request) {
+    public User register(@RequestBody RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -35,15 +36,14 @@ public class AuthController {
                 .role(request.getRole() != null ? request.getRole() : "USER")
                 .build();
 
-        User saved = userService.register(user);
-        String token = jwtTokenProvider.createToken(saved.getId(), saved.getEmail(), saved.getRole());
-        return new AuthResponse(token, saved.getId(), saved.getEmail(), saved.getRole());
+        return userService.register(user);
     }
 
+    // ✅ Token is created only on login
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
-        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
             return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
         }
