@@ -43,13 +43,24 @@ public class AuthController {
 
     // ✅ Token is created only on login
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        User user = userService.findByEmail(request.getEmail());
-        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
-        }
+public AuthResponse login(@RequestBody AuthRequest request) {
+    System.out.println("[DEBUG] login email=" + request.getEmail());
 
-        String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+    User user = userService.findByEmail(request.getEmail());
+    if (user == null) {
+        System.out.println("[DEBUG] user not found in DB");
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
     }
+
+    System.out.println("[DEBUG] dbHash=" + user.getPassword());
+    boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+    System.out.println("[DEBUG] matches=" + matches);
+
+    if (!matches) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+    }
+
+    String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
+    return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+}
 }
