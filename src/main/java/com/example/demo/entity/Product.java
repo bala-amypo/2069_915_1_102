@@ -3,7 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 @Entity
@@ -15,7 +16,8 @@ import java.util.List;
 @Builder
 public class Product {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Name is required")
@@ -31,8 +33,9 @@ public class Product {
     @NotBlank(message = "Category is required")
     private String category;
 
+    // ✅ Hide warranties from JSON output
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product")
+    @JsonIgnore
     private List<Warranty> warranties;
 
     public Product(Long id, String name, String brand, String modelNumber, String category) {
