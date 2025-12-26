@@ -1,11 +1,14 @@
-// AuthResponse.java
 package com.example.demo.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponse {
-    private Long userId;
-    private String email;
-    private String role;
+    private String token;
 }
