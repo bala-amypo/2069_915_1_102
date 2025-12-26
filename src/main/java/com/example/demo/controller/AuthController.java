@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping
 public class AuthController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -26,7 +26,8 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/register")
+    // Map both /auth/register and /swagger-ui/index.html/auth/register
+    @PostMapping({"/auth/register", "/swagger-ui/index.html/auth/register"})
     public AuthResponse register(@RequestBody RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
@@ -44,7 +45,8 @@ public class AuthController {
         return new AuthResponse(token, saved.getId(), saved.getEmail(), saved.getRole());
     }
 
-    @PostMapping("/login")
+    // Map both /auth/login and /swagger-ui/index.html/auth/login
+    @PostMapping({"/auth/login", "/swagger-ui/index.html/auth/login"})
     public AuthResponse login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
