@@ -26,7 +26,7 @@ public class JwtTokenProvider {
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                // ✅ jjwt 0.9.1 style: use secret string directly
+                // jjwt 0.9.1 style: use secret string directly
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret())
                 .compact();
     }

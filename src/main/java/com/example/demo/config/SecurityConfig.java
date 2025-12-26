@@ -34,12 +34,24 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // public endpoints
                 .requestMatchers("/auth/register", "/auth/login").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                // example of role-protected endpoints (adjust as needed)
+                .requestMatchers("/products/**").hasRole("ADMIN")
+                .requestMatchers("/warranties/**").authenticated()
+                .requestMatchers("/users/**").hasRole("ADMIN")
+                .requestMatchers("/schedules/**").authenticated()
+                .requestMatchers("/logs/**").authenticated()
+
+                // everything else
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthenticationFilter,
-                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(
+                jwtAuthenticationFilter,
+                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
