@@ -27,14 +27,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
+    public AuthResponse register(@RequestBody RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole() != null ? request.getRole() : "USER")
                 .build();
-        return userService.register(user);
+
+        User saved = userService.register(user);
+
+        // Generate JWT token for the newly registered user
+        String token = jwtTokenProvider.createToken(saved.getId(), saved.getEmail(), saved.getRole());
+        return new AuthResponse(token);
     }
 
     @PostMapping("/login")
