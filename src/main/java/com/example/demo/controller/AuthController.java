@@ -43,10 +43,11 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
-        if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
-            return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+
+        String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 }
