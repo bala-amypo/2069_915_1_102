@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List; 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +17,8 @@ import java.util.List;
 @Builder
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Name is required")
@@ -32,8 +34,9 @@ public class User {
     @NotBlank(message = "Role is required")
     private String role;
 
+    // ✅ Relationship remains enabled for JPA, but hidden in JSON
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private List<Warranty> warranties;
 
     public User(Long id, String name, String email, String password, String role) {
