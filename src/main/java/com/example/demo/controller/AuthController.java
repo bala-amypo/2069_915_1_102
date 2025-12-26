@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.RegisterResponse;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
@@ -28,7 +29,7 @@ public class AuthController {
 
     // ✅ Register only saves user, no token returned
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
+    public RegisterResponse register(@RequestBody RegisterRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -36,7 +37,8 @@ public class AuthController {
                 .role(request.getRole() != null ? request.getRole() : "USER")
                 .build();
 
-        return userService.register(user);
+        User saved = userService.register(user);
+        return new RegisterResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getRole());
     }
 
     // ✅ Token is created only on login

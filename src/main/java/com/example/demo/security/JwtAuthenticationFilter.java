@@ -51,9 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = claims.get("email", String.class);
                 String role  = claims.get("role", String.class);
 
-                // Map "ADMIN" -> "ROLE_ADMIN" so Spring Security can match hasRole("ADMIN")
-                SimpleGrantedAuthority authority =
-                        new SimpleGrantedAuthority("ROLE_" + role);
+                // Map "ADMIN" -> "ROLE_ADMIN"
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
