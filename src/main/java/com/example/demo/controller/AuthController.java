@@ -7,6 +7,7 @@ import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +17,14 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtProvider;
-    private final PasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
+    // ✅ OPTION A: encoder created locally
     public AuthController(UserService userService,
-                          JwtTokenProvider jwtProvider,
-                          PasswordEncoder encoder) {
+                          JwtTokenProvider jwtProvider) {
         this.userService = userService;
         this.jwtProvider = jwtProvider;
-        this.encoder = encoder;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @PostMapping("/register")
@@ -36,7 +37,7 @@ public class AuthController {
 
         User user = userService.findByEmail(request.getEmail());
 
-        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
@@ -46,7 +47,7 @@ public class AuthController {
                 user.getRole()
         );
 
-        // ✅ FIX: match constructor exactly
+        // ✅ FIXED constructor usage
         return ResponseEntity.ok(
                 new AuthResponse(
                         token,
