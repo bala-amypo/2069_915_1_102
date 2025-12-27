@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -9,31 +10,40 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final JwtProperties jwtProperties;
+    private final JwtProperties properties;
 
     public JwtTokenProvider(JwtProperties properties) {
-        this.jwtProperties = properties;
+        this.properties = properties;
     }
 
     public String createToken(Long userId, String email, String role) {
+
         Date now = new Date();
-        Date exp = new Date(now.getTime() + jwtProperties.getExpirationMs());
+        Date expiry = new Date(
+                now.getTime() + properties.getExpirationMs()
+        );
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
-                .claim("userId", userId.intValue())
+                .setSubject(userId.toString())
                 .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(now)
-                .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecret())
+                .setExpiration(expiry)
+                .signWith(
+                        Keys.hmacShaKeyFor(
+                                properties.getSecret().getBytes()),
+                        SignatureAlgorithm.HS256
+                )
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
+            Jwts.parserBuilder()
+                .setSigningKey(
+                        Keys.hmacShaKeyFor(
+                                properties.getSecret().getBytes()))
+                .build()
                 .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
@@ -42,8 +52,11 @@ public class JwtTokenProvider {
     }
 
     public Jws<Claims> getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
+        return Jwts.parserBuilder()
+                .setSigningKey(
+                        Keys.hmacShaKeyFor(
+                                properties.getSecret().getBytes()))
+                .build()
                 .parseClaimsJws(token);
     }
 }
