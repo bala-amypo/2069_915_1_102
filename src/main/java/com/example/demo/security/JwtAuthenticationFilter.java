@@ -33,10 +33,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
+
             String token = header.substring(7);
             Claims claims = provider.getClaims(token);
 
             String role = claims.get("role", String.class);
+
+            // ✅ CRITICAL FIX
+            if (!role.startsWith("ROLE_")) {
+                role = "ROLE_" + role;
+            }
 
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
