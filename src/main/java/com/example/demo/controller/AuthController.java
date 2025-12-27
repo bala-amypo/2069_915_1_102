@@ -14,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,6 +37,7 @@ public class AuthController {
     }
 
     // ✅ Register only saves user, no token returned
+    @Operation(summary = "Register a new user", security = @SecurityRequirement(name = "none"))
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequest request) {
         User user = User.builder()
@@ -48,6 +51,7 @@ public class AuthController {
     }
 
     // ✅ Token is created only on login
+    @Operation(summary = "Login with credentials", security = @SecurityRequirement(name = "none"))
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         Authentication authentication;
