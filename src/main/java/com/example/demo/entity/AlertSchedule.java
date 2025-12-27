@@ -9,28 +9,28 @@ public class AlertSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long warrantyId;
+    private int daysBeforeExpiry;
 
-    private String message;
+    @ManyToOne
+    private Warranty warranty;
 
-    // getters & setters
     public Long getId() {
         return id;
     }
 
-    public Long getWarrantyId() {
-        return warrantyId;
+    public int getDaysBeforeExpiry() {
+        return daysBeforeExpiry;
     }
 
-    public void setWarrantyId(Long warrantyId) {
-        this.warrantyId = warrantyId;
+    public void setDaysBeforeExpiry(int daysBeforeExpiry) {
+        this.daysBeforeExpiry = daysBeforeExpiry;
     }
 
-    public String getMessage() {
-        return message;
+    public Warranty getWarranty() {
+        return warranty;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setWarranty(Warranty warranty) {
+        this.warranty = warranty;
     }
 }

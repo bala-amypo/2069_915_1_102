@@ -19,20 +19,23 @@ public class WarrantyController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping("/register/{userId}/{productId}")
-    public Warranty register(@PathVariable Long userId,
-                             @PathVariable Long productId) {
-        return service.registerWarranty(userId, productId);
+    public Warranty registerWarranty(
+            @PathVariable Long userId,
+            @PathVariable Long productId,
+            @RequestBody Warranty warranty
+    ) {
+        return service.registerWarranty(userId, productId, warranty);
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
-    public Warranty get(@PathVariable Long id) {
+    public Warranty getWarranty(@PathVariable Long id) {
         return service.getWarranty(id);
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/user/{userId}")
-    public List<Warranty> byUser(@PathVariable Long userId) {
+    public List<Warranty> getUserWarranties(@PathVariable Long userId) {
         return service.getUserWarranties(userId);
     }
 }

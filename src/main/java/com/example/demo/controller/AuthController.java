@@ -32,11 +32,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest req) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
 
-        User user = userService.findByEmail(req.getEmail());
+        User user = userService.findByEmail(request.getEmail());
 
-        if (!encoder.matches(req.getPassword(), user.getPassword())) {
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
@@ -46,8 +46,14 @@ public class AuthController {
                 user.getRole()
         );
 
+        // ✅ FIX: match constructor exactly
         return ResponseEntity.ok(
-                new AuthResponse(token, user.getEmail(), user.getRole())
+                new AuthResponse(
+                        token,
+                        user.getId(),
+                        user.getEmail(),
+                        user.getRole()
+                )
         );
     }
 }
