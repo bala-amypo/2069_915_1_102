@@ -69,9 +69,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         User user = userService.findByEmail(request.getEmail());
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
-        }
+        // if (user == null) {
+        //     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
+        // }
 
         String token = jwtTokenProvider.createToken(
                 user.getId(),
