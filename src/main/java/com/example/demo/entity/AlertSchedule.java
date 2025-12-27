@@ -1,15 +1,36 @@
-// src/main/java/com/example/demo/entity/AlertSchedule.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class AlertSchedule {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer daysBeforeExpiry;
-    private Boolean enabled;
-    @ManyToOne private Warranty warranty;
+
+    private Long warrantyId;
+
+    private String message;
+
+    // getters & setters
+    public Long getId() {
+        return id;
+    }
+
+    public Long getWarrantyId() {
+        return warrantyId;
+    }
+
+    public void setWarrantyId(Long warrantyId) {
+        this.warrantyId = warrantyId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

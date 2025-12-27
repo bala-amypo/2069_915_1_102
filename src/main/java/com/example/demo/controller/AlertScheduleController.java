@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.AlertSchedule;
 import com.example.demo.service.AlertScheduleService;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +19,11 @@ public class AlertScheduleController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping("/{warrantyId}")
-    public AlertSchedule createSchedule(@PathVariable Long warrantyId) {
-        return service.createSchedule(warrantyId);
+    public AlertSchedule createSchedule(
+            @PathVariable Long warrantyId,
+            @RequestBody AlertSchedule schedule
+    ) {
+        return service.createSchedule(warrantyId, schedule);
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
