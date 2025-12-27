@@ -69,13 +69,11 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
         }
 
-        String token = jwtTokenProvider.generateToken(
-                authentication,
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
+        String token = jwtTokenProvider.createToken(
+        user.getId(),
+        user.getEmail(),
+        user.getRole()
         );
-
         return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 }
