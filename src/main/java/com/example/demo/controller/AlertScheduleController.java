@@ -1,28 +1,22 @@
-package com.example.demo.controller;
-
-import com.example.demo.entity.AlertSchedule;
-import com.example.demo.service.AlertScheduleService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/schedules")
 public class AlertScheduleController {
-    private final AlertScheduleService alertScheduleService;
-    public AlertScheduleController(AlertScheduleService s) {
-        this.alertScheduleService = s;
+
+    private final AlertScheduleService service;
+
+    public AlertScheduleController(AlertScheduleService service) {
+        this.service = service;
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping("/{warrantyId}")
-    public AlertSchedule createSchedule(@PathVariable Long warrantyId, @RequestBody AlertSchedule schedule) {
-        return alertScheduleService.createSchedule(warrantyId, schedule);
+    public AlertSchedule create(@PathVariable Long warrantyId) {
+        return service.createSchedule(warrantyId);
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{warrantyId}")
-    public List<AlertSchedule> getSchedules(@PathVariable Long warrantyId) {
-        return alertScheduleService.getSchedules(warrantyId);
+    public List<AlertSchedule> get(@PathVariable Long warrantyId) {
+        return service.getSchedules(warrantyId);
     }
 }
