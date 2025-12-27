@@ -1,8 +1,7 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.example.demo.config.JwtProperties;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +11,18 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    // ✅ 256-bit secret key (JUnit + jjwt safe)
-    private static final SecretKey KEY =
-            Keys.hmacShaKeyFor(
-                    "THIS_IS_A_256_BIT_SECRET_KEY_FOR_TESTING_PURPOSES_ONLY"
-                            .getBytes()
-            );
+    private final SecretKey key;
+    private final long expiration;
 
-    private static final long EXPIRATION =
-            24 * 60 * 60 * 1000; // 24 hours
+    // ✅ REQUIRED BY TESTS
+    public JwtTokenProvider(JwtProperties properties) {
+        this.key = Keys.hmacShaKeyFor(properties.getSecret().getBytes());
+        this.expiration = properties.getExpiration();
+    }
 
-    public String generateToken(Long id, String email, String role) {
+    // ✅ REQUIRED BY TESTS
+    public String createToken(Long id, String email, String role) {
 
-        // ✅ CRITICAL FIX (DO IT HERE, NOT LATER)
         if (!role.startsWith("ROLE_")) {
             role = "ROLE_" + role;
         }
@@ -34,14 +32,28 @@ public class JwtTokenProvider {
                 .claim("id", id)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(KEY, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    // ✅ REQUIRED BY TESTS
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    // ✅ USED BY FILTER
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
