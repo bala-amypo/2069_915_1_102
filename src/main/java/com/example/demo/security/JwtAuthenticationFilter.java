@@ -25,10 +25,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain
+    ) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
 
@@ -39,19 +40,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String role = claims.get("role", String.class);
 
-            // ✅ CRITICAL FIX
+            // ✅ SAFETY NET (should already be ROLE_)
             if (!role.startsWith("ROLE_")) {
                 role = "ROLE_" + role;
             }
 
-            UsernamePasswordAuthenticationToken auth =
+            UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             claims.getSubject(),
                             null,
                             List.of(new SimpleGrantedAuthority(role))
                     );
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
         }
 
         chain.doFilter(request, response);
