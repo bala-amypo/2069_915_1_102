@@ -13,7 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class User {
 
@@ -40,17 +39,29 @@ public class User {
 
     // ✅ REQUIRED BY TESTS
     public User(Long id,
-            String name,
-            String email,
-            String password,
-            String role,
-            List<Warranty> warranties) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.role = role;
-    this.warranties = warranties;
-}
+                String name,
+                String email,
+                String password,
+                String role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
+    // ✅ REQUIRED BY TESTS (FULL)
+    public User(Long id,
+                String name,
+                String email,
+                String password,
+                String role,
+                List<Warranty> warranties) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.warranties = warranties;
+    }
 }
