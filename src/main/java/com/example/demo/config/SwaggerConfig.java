@@ -27,7 +27,7 @@ public class SwaggerConfig {
                         .title("Digital Warranty Tracker API")
                         .version("v1")
                         .description("API documentation with JWT authentication"))
-                // ✅ Point to your API base, not swagger-ui HTML
+             
                 .servers(List.of(
                         new Server().url("https://9084.408procr.amypo.ai/")
                 ))
