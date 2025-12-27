@@ -43,13 +43,31 @@ public class AuthController {
     // ✅ Token is created only on login
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
-        User user = userService.findByEmail(request.getEmail());
-
-        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User user = userService.findByEmail(request.getEmail());
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
+        }
+
+        String token = jwtTokenProvider.generateToken(
+                authentication,
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
 
         return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
