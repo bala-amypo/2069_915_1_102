@@ -43,6 +43,7 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
+        System.out.println(user.getPassword());
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
