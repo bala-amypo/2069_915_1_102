@@ -6,6 +6,7 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/auth")
@@ -36,10 +35,10 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    // ✅ Register only saves user, no token returned
-    @Operation(summary = "Register a new user", security = @SecurityRequirement(name = "none"))
+    @Operation(summary = "Register user", security = {})
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequest request) {
+
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -50,10 +49,10 @@ public class AuthController {
         return userService.register(user);
     }
 
-    // ✅ Token is created only on login
-    @Operation(summary = "Login with credentials", security = @SecurityRequirement(name = "none"))
+    @Operation(summary = "Login", security = {})
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
+
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
@@ -63,15 +62,15 @@ public class AuthController {
                     )
             );
         } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Invalid credentials"
+            );
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         User user = userService.findByEmail(request.getEmail());
-        // if (user == null) {
-        //     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
-        // }
 
         String token = jwtTokenProvider.createToken(
                 user.getId(),
@@ -79,6 +78,11 @@ public class AuthController {
                 user.getRole()
         );
 
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 }
