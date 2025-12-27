@@ -1,11 +1,11 @@
 package com.example.demo.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,17 +18,17 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider provider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtAuthenticationFilter(JwtTokenProvider provider) {
-        this.provider = provider;
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain chain
+            FilterChain filterChain
     ) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
@@ -36,26 +36,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
 
             String token = header.substring(7);
-            Claims claims = provider.getClaims(token);
 
-            String role = claims.get("role", String.class);
+            if (jwtTokenProvider.validateToken(token)) {
 
-            // ✅ SAFETY NET (should already be ROLE_)
-            if (!role.startsWith("ROLE_")) {
-                role = "ROLE_" + role;
+                // ✅ FIX: get Jws<Claims>
+                Jws<Claims> jwsClaims = jwtTokenProvider.getClaims(token);
+                Claims claims = jwsClaims.getBody();
+
+                String email = claims.get("email", String.class);
+                String role = claims.get("role", String.class);
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                email,
+                                null,
+                                List.of(new SimpleGrantedAuthority(role))
+                        );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            claims.getSubject(),
-                            null,
-                            List.of(new SimpleGrantedAuthority(role))
-                    );
-
-            SecurityContextHolder.getContext()
-                    .setAuthentication(authentication);
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }
