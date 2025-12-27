@@ -8,9 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class JwtProperties {
 
     private String secret;
-
-    // 🔴 TESTS EXPECT THIS NAME
-    private long expirationMs;
+    private long expirationMs; // ✅ EXACT NAME REQUIRED
 
     public String getSecret() {
         return secret;

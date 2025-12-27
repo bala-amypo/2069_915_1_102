@@ -20,13 +20,17 @@ public class JwtTokenProvider {
         this.expirationMs = properties.getExpirationMs();
     }
 
-    // ✅ TESTS REQUIRE EXACT CLAIM NAMES
+    // ✅ REQUIRED METHOD NAME
     public String createToken(Long userId, String email, String role) {
+
+        if (!role.startsWith("ROLE_")) {
+            role = "ROLE_" + role;
+        }
 
         return Jwts.builder()
                 .setSubject(email)
-                .claim("userId", userId)
-                .claim("email", email)
+                .claim("userId", userId)   // ✅ REQUIRED
+                .claim("email", email)     // ✅ REQUIRED
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
@@ -34,6 +38,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // ✅ REQUIRED BY TESTS
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -41,12 +46,12 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException | IllegalArgumentException ex) {
             return false;
         }
     }
 
-    // 🔴 MUST RETURN Jws<Claims>
+    // ✅ REQUIRED RETURN TYPE
     public Jws<Claims> getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
