@@ -22,19 +22,17 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public AuthController(UserService userService,
                           JwtTokenProvider jwtTokenProvider,
-                          PasswordEncoder passwordEncoder,
                           AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
 
+    // ✅ NO encoding here
     @Operation(summary = "Register user", security = {})
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequest request) {
@@ -42,7 +40,7 @@ public class AuthController {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(request.getPassword()) // raw password
                 .role(request.getRole() != null ? request.getRole() : "USER")
                 .build();
 
