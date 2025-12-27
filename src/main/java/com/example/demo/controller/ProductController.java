@@ -1,28 +1,31 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Product;
-import com.example.demo.service.ProductService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import com.example.demo.repository.ProductRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    private final ProductService productService;
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+
+    private final ProductRepository repo;
+
+    public ProductController(ProductRepository repo) {
+        this.repo = repo;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-        return productService.addProduct(product);
+    public Product add(@RequestBody Product product) {
+        return repo.save(product);
     }
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<Product> getAll() {
+        return repo.findAll();
     }
 }
