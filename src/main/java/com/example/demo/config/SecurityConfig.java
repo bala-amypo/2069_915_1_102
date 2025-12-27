@@ -24,26 +24,24 @@ public class SecurityConfig {
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
-    // ✅ Password encoder bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ AuthenticationManager bean (needed for AuthController)
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // ✅ Security filter chain
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            // .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // ✅ Open endpoints
                 .requestMatchers("/auth/register", "/auth/login").permitAll()
                 // ✅ Swagger & OpenAPI endpoints
                 .requestMatchers(
@@ -53,8 +51,10 @@ public class SecurityConfig {
                     "/v3/api-docs.yaml",
                     "/v3/api-docs"
                 ).permitAll()
+                // ✅ Role-based restriction
                 .requestMatchers("/products/**").hasRole("ADMIN")
-                // .anyRequest().authenticated()
+                // ✅ Everything else requires authentication
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter,
                 org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
