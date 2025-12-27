@@ -70,10 +70,11 @@ public class AuthController {
         }
 
         String token = jwtTokenProvider.createToken(
-        user.getId(),
-        user.getEmail(),
-        user.getRole()
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
         );
+
         return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 }
