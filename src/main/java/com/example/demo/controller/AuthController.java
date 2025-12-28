@@ -5,14 +5,15 @@ import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@Tag(name = "Authentication", description = "User registration and login with JWT")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -21,17 +22,13 @@ public class AuthController {
     private final JwtTokenProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(
-            UserService userService,
-            JwtTokenProvider jwtProvider,
-            AuthenticationManager authenticationManager
-    ) {
+    public AuthController(UserService userService, JwtTokenProvider jwtProvider, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
     }
 
-    // ✅ REGISTER
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public String register(@RequestBody User user) {
@@ -39,37 +36,24 @@ public class AuthController {
         return "User registered successfully";
     }
 
-    // ✅ LOGIN → JWT
+    @Operation(summary = "Login and receive JWT token")
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
-
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
+                new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+                )
             );
         } catch (Exception ex) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Invalid credentials"
-            );
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
         User user = userService.findByEmail(request.getEmail());
 
-        String token = jwtProvider.createToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
-        );
+        String token = jwtProvider.createToken(user.getId(), user.getEmail(), user.getRole());
 
-        return new AuthResponse(
-                token,
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
-        );
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
     }
 }
