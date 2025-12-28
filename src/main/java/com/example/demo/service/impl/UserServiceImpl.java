@@ -15,6 +15,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
+
+    // Local encoder is OK for tests
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     // ⚠️ DO NOT CHANGE — tests depend on this constructor

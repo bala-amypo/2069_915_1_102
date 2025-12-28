@@ -2,10 +2,12 @@ package com.example.demo.config;
 
 import com.example.demo.security.JwtAuthenticationEntryPoint;
 import com.example.demo.security.JwtAuthenticationFilter;
+import com.example.demo.service.impl.UserServiceImpl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,13 +23,16 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
     private final JwtAuthenticationEntryPoint entryPoint;
+    private final UserServiceImpl userService;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtFilter,
-            JwtAuthenticationEntryPoint entryPoint
+            JwtAuthenticationEntryPoint entryPoint,
+            UserServiceImpl userService
     ) {
         this.jwtFilter = jwtFilter;
         this.entryPoint = entryPoint;
+        this.userService = userService;
     }
 
     @Bean
@@ -36,9 +41,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(e -> e.authenticationEntryPoint(entryPoint))
-            .sessionManagement(s ->
-                s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/auth/**",
@@ -53,13 +56,22 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ✅ REQUIRED FOR AUTHENTICATION + TESTS
+    // ✅ REQUIRED: Password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ REQUIRED BY TESTS
+    // ✅ REQUIRED: Authentication provider
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    // ✅ REQUIRED: Authentication manager
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
