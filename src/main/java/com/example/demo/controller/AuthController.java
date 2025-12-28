@@ -22,15 +22,17 @@ public class AuthController {
     private final JwtTokenProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService,
-                          JwtTokenProvider jwtProvider,
-                          AuthenticationManager authenticationManager) {
+    public AuthController(
+            UserService userService,
+            JwtTokenProvider jwtProvider,
+            AuthenticationManager authenticationManager
+    ) {
         this.userService = userService;
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
     }
 
-    // ✅ REGISTER
+    // ✅ REGISTER (tests expect this)
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public String register(@RequestBody User user) {
@@ -38,26 +40,27 @@ public class AuthController {
         return "User registered successfully";
     }
 
-    // ✅ LOGIN
+    // ✅ LOGIN (tests expect JWT creation)
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
-        Authentication authentication;
         try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
+            Authentication authentication =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    request.getEmail(),
+                                    request.getPassword()
+                            )
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                     "Invalid credentials"
             );
         }
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         User user = userService.findByEmail(request.getEmail());
 
