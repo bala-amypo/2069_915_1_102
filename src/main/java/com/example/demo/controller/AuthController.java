@@ -30,6 +30,15 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    // ✅ REGISTER
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String register(@RequestBody User user) {
+        userService.register(user);
+        return "User registered successfully";
+    }
+
+    // ✅ LOGIN
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
@@ -52,7 +61,6 @@ public class AuthController {
 
         User user = userService.findByEmail(request.getEmail());
 
-        // ✅ FIXED METHOD NAME
         String token = jwtProvider.createToken(
                 user.getId(),
                 user.getEmail(),
