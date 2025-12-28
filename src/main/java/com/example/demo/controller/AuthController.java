@@ -9,7 +9,6 @@ import com.example.demo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,7 +31,7 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    // ✅ REGISTER (tests expect this)
+    // ✅ REGISTER
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public String register(@RequestBody User user) {
@@ -40,21 +39,17 @@ public class AuthController {
         return "User registered successfully";
     }
 
-    // ✅ LOGIN (tests expect JWT creation)
+    // ✅ LOGIN → JWT
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
         try {
-            Authentication authentication =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    request.getEmail(),
-                                    request.getPassword()
-                            )
-                    );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
         } catch (Exception ex) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
