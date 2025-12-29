@@ -16,10 +16,9 @@ public class AlertSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔴 MUST BE Integer
+
     private Integer daysBeforeExpiry;
 
-    // 🔴 REQUIRED BY TESTS
     private Boolean enabled;
 
     @ManyToOne

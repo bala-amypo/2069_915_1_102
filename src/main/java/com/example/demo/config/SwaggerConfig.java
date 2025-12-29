@@ -30,7 +30,6 @@ public class SwaggerConfig {
                 .servers(List.of(
                         new Server().url("https://9084.408procr.amypo.ai/")
                 ))
-                // ✅ Require bearerAuth globally
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }

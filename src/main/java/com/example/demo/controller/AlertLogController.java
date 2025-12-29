@@ -23,7 +23,6 @@ public class AlertLogController {
         this.alertLogService = alertLogService;
     }
 
-    // ✅ ADMIN ONLY
     @Operation(summary = "Add a new log entry for a warranty (ADMIN only)")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{warrantyId}")
@@ -34,7 +33,7 @@ public class AlertLogController {
         return alertLogService.addLog(warrantyId, message);
     }
 
-    // ✅ ADMIN ONLY
+    
     @Operation(summary = "Get all logs for a warranty (ADMIN only)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{warrantyId}")

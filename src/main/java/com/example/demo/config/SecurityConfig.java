@@ -56,13 +56,11 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ✅ REQUIRED: Password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ REQUIRED: Authentication provider
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
