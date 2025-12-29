@@ -14,29 +14,27 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final Key key;
-    private final long expiration;
+    private final long expirationMs;
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.expiration}") long expiration) {
+            @Value("${jwt.expiration-ms}") long expirationMs) {
 
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.expiration = expiration;
+        this.expirationMs = expirationMs;
     }
 
-    // ✅ USED BY AuthController
     public String createToken(Long userId, String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("userId", userId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ✅ USED BY JwtAuthenticationFilter
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
