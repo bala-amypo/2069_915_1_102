@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtTokenProvider.validateToken(token)) {
 
-                // ✅ FIX: get Jws<Claims>
                 Jws<Claims> jwsClaims = jwtTokenProvider.getClaims(token);
                 Claims claims = jwsClaims.getBody();
 

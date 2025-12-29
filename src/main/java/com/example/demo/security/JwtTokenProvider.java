@@ -14,13 +14,11 @@ public class JwtTokenProvider {
     private final SecretKey key;
     private final long expirationMs;
 
-    // ✅ REQUIRED BY TESTS
     public JwtTokenProvider(JwtProperties properties) {
         this.key = Keys.hmacShaKeyFor(properties.getSecret().getBytes());
         this.expirationMs = properties.getExpirationMs();
     }
 
-    // ✅ REQUIRED METHOD NAME
     public String createToken(Long userId, String email, String role) {
 
         if (!role.startsWith("ROLE_")) {
@@ -29,8 +27,8 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(email)
-                .claim("userId", userId)   // ✅ REQUIRED
-                .claim("email", email)     // ✅ REQUIRED
+                .claim("userId", userId)   
+                .claim("email", email)     
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
@@ -38,7 +36,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // ✅ REQUIRED BY TESTS
+   
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -51,7 +49,6 @@ public class JwtTokenProvider {
         }
     }
 
-    // ✅ REQUIRED RETURN TYPE
     public Jws<Claims> getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

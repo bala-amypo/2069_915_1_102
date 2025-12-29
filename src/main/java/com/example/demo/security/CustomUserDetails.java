@@ -16,7 +16,6 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    // ✅ Return role as authority
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(user.getRole()));
@@ -29,12 +28,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail(); // Spring uses this as the login identifier
+        return user.getEmail(); 
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // You can add logic later if needed
+        return true; 
     }
 
     @Override
@@ -51,8 +50,6 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    // ✅ Optional: expose full User object
     public User getUser() {
         return user;
     }

@@ -33,7 +33,6 @@ public class Product {
     @NotBlank(message = "Category is required")
     private String category;
 
-    // ✅ Hide warranties from JSON output
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<Warranty> warranties;

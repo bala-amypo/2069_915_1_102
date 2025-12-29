@@ -37,7 +37,6 @@ public class User {
     @JsonIgnore
     private List<Warranty> warranties;
 
-    // ✅ REQUIRED BY TESTS
     public User(Long id,
                 String name,
                 String email,
@@ -50,7 +49,6 @@ public class User {
         this.role = role;
     }
 
-    // ✅ REQUIRED BY TESTS (FULL)
     public User(Long id,
                 String name,
                 String email,
