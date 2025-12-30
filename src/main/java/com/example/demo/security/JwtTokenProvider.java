@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,10 +17,23 @@ public class JwtTokenProvider {
     private final Key key;
     private final long expirationMs;
 
+    /* ===== Spring Boot constructor ===== */
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration-ms}") long expirationMs) {
 
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.expirationMs = expirationMs;
+    }
+
+    /* ===== TEST COMPATIBILITY CONSTRUCTOR ===== */
+    public JwtTokenProvider(JwtProperties props) {
+        this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
+        this.expirationMs = props.getExpirationMs();
+    }
+
+    /* ===== TEST COMPATIBILITY CONSTRUCTOR ===== */
+    public JwtTokenProvider(String secret, long expirationMs) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMs;
     }
@@ -35,6 +49,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /* ===== Tests expect Claims.getBody() ===== */
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
