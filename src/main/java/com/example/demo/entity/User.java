@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+
 @Builder   // ✅ REQUIRED FOR builder()
 public class User {
 
