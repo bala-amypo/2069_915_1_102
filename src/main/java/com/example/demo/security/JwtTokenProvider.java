@@ -11,7 +11,6 @@ public class JwtTokenProvider {
 
     private final Key key;
     private final long expirationMs;
-    @Component
     // ✅ REQUIRED BY TESTS
     public JwtTokenProvider(JwtProperties props) {
         this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
