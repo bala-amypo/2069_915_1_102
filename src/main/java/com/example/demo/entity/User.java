@@ -24,14 +24,12 @@ public class User implements UserDetails {
 
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     private String password;
 
-    private String role;
-
-    /* ===== UserDetails ===== */
+    private String role; // ROLE_USER / ROLE_ADMIN
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

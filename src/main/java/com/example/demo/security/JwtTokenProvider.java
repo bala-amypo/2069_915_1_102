@@ -17,7 +17,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final long expirationMs;
 
-    /* ===== Spring Boot constructor ===== */
+    // PROD
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration-ms}") long expirationMs) {
@@ -26,13 +26,12 @@ public class JwtTokenProvider {
         this.expirationMs = expirationMs;
     }
 
-    /* ===== TEST COMPATIBILITY CONSTRUCTOR ===== */
+    // TEST
     public JwtTokenProvider(JwtProperties props) {
         this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
         this.expirationMs = props.getExpirationMs();
     }
 
-    /* ===== TEST COMPATIBILITY CONSTRUCTOR ===== */
     public JwtTokenProvider(String secret, long expirationMs) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMs;
@@ -49,21 +48,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /* ===== Tests expect Claims.getBody() ===== */
     public Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }

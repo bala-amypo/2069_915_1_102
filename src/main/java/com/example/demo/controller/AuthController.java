@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authManager;
     private final JwtTokenProvider jwtProvider;
 
     public AuthController(
-            AuthenticationManager authenticationManager,
+            AuthenticationManager authManager,
             JwtTokenProvider jwtProvider) {
-        this.authenticationManager = authenticationManager;
+
+        this.authManager = authManager;
         this.jwtProvider = jwtProvider;
     }
 
@@ -24,9 +25,8 @@ public class AuthController {
             @RequestParam String email,
             @RequestParam String password) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
+        authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password));
 
         return jwtProvider.createToken(1L, email, "ROLE_USER");
     }
