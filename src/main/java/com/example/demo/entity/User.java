@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-
+@AllArgsConstructor
 @Builder   // ✅ REQUIRED FOR builder()
 public class User {
 
@@ -20,12 +20,5 @@ public class User {
     private String password;
     private String role;
 
-    // ✅ REQUIRED: used directly in tests
-    public User(Long id, String name, String email, String password, String role) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+   
 }

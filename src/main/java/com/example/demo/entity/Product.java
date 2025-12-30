@@ -24,12 +24,5 @@ public class Product {
     private String modelNumber;
     private String category;
 
-    // REQUIRED
-    public Product(Long id, String name, String brand, String modelNumber, String category) {
-        this.id = id;
-        this.name = name;
-        this.brand = brand;
-        this.modelNumber = modelNumber;
-        this.category = category;
-    }
+    
 }
