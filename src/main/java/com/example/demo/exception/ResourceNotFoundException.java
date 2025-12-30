@@ -1,4 +1,4 @@
-]// src/main/java/com/example/demo/exception/ResourceNotFoundException.java
+// src/main/java/com/example/demo/exception/ResourceNotFoundException.java
 package com.example.demo.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
