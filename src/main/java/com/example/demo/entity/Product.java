@@ -1,17 +1,12 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-
 @Builder
 public class Product {
 
@@ -24,5 +19,12 @@ public class Product {
     private String modelNumber;
     private String category;
 
-    
+    // ✅ REQUIRED BY TEST CASE (priority 11, 25)
+    public Product(Long id, String name, String brand, String modelNumber, String category) {
+        this.id = id;
+        this.name = name;
+        this.brand = brand;
+        this.modelNumber = modelNumber;
+        this.category = category;
+    }
 }
