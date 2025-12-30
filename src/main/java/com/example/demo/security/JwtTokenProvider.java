@@ -3,53 +3,59 @@ package com.example.demo.security;
 import com.example.demo.config.JwtProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Component
 public class JwtTokenProvider {
 
-    private final Key key;
+    private final SecretKey key;
     private final long expirationMs;
+
     // ✅ REQUIRED BY TESTS
-    public JwtTokenProvider(JwtProperties props) {
-        this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
-        this.expirationMs = props.getExpirationMs();
+    public JwtTokenProvider(JwtProperties properties) {
+        this.key = Keys.hmacShaKeyFor(properties.getSecret().getBytes());
+        this.expirationMs = properties.getExpirationMs();
     }
 
-    // (Optional, safe to keep)
-    public JwtTokenProvider(String secret, long expirationMs) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.expirationMs = expirationMs;
-    }
-
+    // ✅ REQUIRED METHOD NAME
     public String createToken(Long userId, String email, String role) {
+
+        if (!role.startsWith("ROLE_")) {
+            role = "ROLE_" + role;
+        }
+
         return Jwts.builder()
-                .claim("userId", userId)
-                .claim("email", email)
-                .claim("role", role)
                 .setSubject(email)
+                .claim("userId", userId)   // ✅ REQUIRED
+                .claim("email", email)     // ✅ REQUIRED
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ✅ MUST RETURN Jws<Claims>
+    // ✅ REQUIRED BY TESTS
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException ex) {
+            return false;
+        }
+    }
+
+    // ✅ REQUIRED RETURN TYPE
     public Jws<Claims> getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
-    }
-
-    // ✅ REQUIRED BY TESTS
-    public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }
